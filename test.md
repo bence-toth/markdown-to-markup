@@ -78,6 +78,19 @@ Please don't use the `&lt;marquee&gt;` tag. `// TODO: this should work with > an
     2. Follow
 5. Wicked
 
++ List
++ Items
++ Even with `inline code`
++ Even
+    1. Embedded
+        + So
+            1. Many
+                + Levels
+            2. I cannot
+        + Even
+    2. Follow
++ Wicked
+
 *   This is a list item with two paragraphs.
 
     This is the second paragraph in the list item.
