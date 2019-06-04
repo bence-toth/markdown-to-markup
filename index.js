@@ -1,12 +1,14 @@
 const fs = require('fs')
 const {tokenize} = require('./tokenizer/index')
 const {
+  renderEmphasis,
   renderHeading,
   renderHtml,
-  renderParagraph,
-  renderText,
   renderInlineCode,
-  renderList
+  renderList,
+  renderParagraph,
+  renderStrong,
+  renderText,
 } = require('./renderers/index')
 
 const headingLevelOffset = 0
@@ -14,6 +16,10 @@ const headingLevelOffset = 0
 const tokenToMarkup = token => {
   const {type} = token
   const tokenRenderer = {
+    emphasis: () => renderEmphasis({
+      token,
+      tokenToMarkup
+    }),
     heading: () => renderHeading({
       token,
       headingLevelOffset,
@@ -26,6 +32,10 @@ const tokenToMarkup = token => {
       tokenToMarkup
     }),
     paragraph: () => renderParagraph({
+      token,
+      tokenToMarkup
+    }),
+    strong: () => renderStrong({
       token,
       tokenToMarkup
     }),
