@@ -110,3 +110,7 @@ Please don't use the `&lt;marquee&gt;` tag. `// TODO: this should work with > an
 <div style='color: red;'>Look Mom, HTML!</div>
 
 Emphasis _all_ __four__ *possible* **ways**. Also in the middle of very**long**words.
+
+-----
+
+And now something completely different.

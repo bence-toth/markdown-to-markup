@@ -9,6 +9,7 @@ const {
   renderParagraph,
   renderStrong,
   renderText,
+  renderThematicBreak
 } = require('./renderers/index')
 
 const headingLevelOffset = 0
@@ -39,7 +40,8 @@ const tokenToMarkup = token => {
       token,
       tokenToMarkup
     }),
-    text: () => renderText({token})
+    text: () => renderText({token}),
+    thematicBreak: () => renderThematicBreak()
   }
   return tokenRenderer[type] ? tokenRenderer[type]() : ''
 }

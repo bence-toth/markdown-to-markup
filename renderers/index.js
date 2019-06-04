@@ -6,6 +6,7 @@ const {renderList} = require('./list.js')
 const {renderParagraph} = require('./paragraph.js')
 const {renderStrong} = require('./strong.js')
 const {renderText} = require('./text.js')
+const {renderThematicBreak} = require('./thematicBreak.js')
 
 module.exports = {
   renderEmphasis,
@@ -15,5 +16,6 @@ module.exports = {
   renderList,
   renderParagraph,
   renderStrong,
-  renderText
+  renderText,
+  renderThematicBreak
 }
