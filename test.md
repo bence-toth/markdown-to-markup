@@ -107,4 +107,6 @@ Please don't use the `&lt;marquee&gt;` tag. `// TODO: this should work with > an
 
 1986\. What a great season.
 
-<div style='color: red;'>Look Mom, HTML!<div>
+<div style='color: red;'>Look Mom, HTML!</div>
+
+Emphasis _all_ __four__ *possible* **ways**. Also in the middle of very**long**words.
