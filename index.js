@@ -4,6 +4,7 @@ const {
   renderEmphasis,
   renderHeading,
   renderHtml,
+  renderImage,
   renderInlineCode,
   renderList,
   renderParagraph,
@@ -27,6 +28,7 @@ const tokenToMarkup = token => {
       tokenToMarkup
     }),
     html: () => renderHtml({token}),
+    image: () => renderImage({token}),
     inlineCode: () => renderInlineCode({token}),
     list: () => renderList({
       token,
