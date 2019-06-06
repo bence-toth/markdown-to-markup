@@ -1,55 +1,14 @@
 const fs = require('fs')
-const {tokenize} = require('./tokenizer/index')
-const {
-  renderEmphasis,
-  renderHeading,
-  renderHtml,
-  renderInlineCode,
-  renderList,
-  renderParagraph,
-  renderStrong,
-  renderText,
-  renderThematicBreak
-} = require('./renderers/index')
-
-const headingLevelOffset = 0
-
-const tokenToMarkup = token => {
-  const {type} = token
-  const tokenRenderer = {
-    emphasis: () => renderEmphasis({
-      token,
-      tokenToMarkup
-    }),
-    heading: () => renderHeading({
-      token,
-      headingLevelOffset,
-      tokenToMarkup
-    }),
-    html: () => renderHtml({token}),
-    inlineCode: () => renderInlineCode({token}),
-    list: () => renderList({
-      token,
-      tokenToMarkup
-    }),
-    paragraph: () => renderParagraph({
-      token,
-      tokenToMarkup
-    }),
-    strong: () => renderStrong({
-      token,
-      tokenToMarkup
-    }),
-    text: () => renderText({token}),
-    thematicBreak: () => renderThematicBreak()
-  }
-  return tokenRenderer[type] ? tokenRenderer[type]() : ''
-}
+const {tokenize} = require('./tokenizer')
+const {tokenToMarkup} = require('./renderer')
+const {resolveReferences} = require('./referenceResolver')
 
 fs.readFile('test.md', 'utf8', (error, markdownContent) => {
   if (!error) {
     const markup =
-      tokenize(markdownContent)
+      resolveReferences(
+        tokenize(markdownContent)
+      )
         .map(tokenToMarkup)
         .join('\n')
     fs.writeFile('index.html', markup, error => {

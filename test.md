@@ -1,4 +1,4 @@
-# Example heading 3
+# Example heading 1
 
 Example heading 1
 =================
@@ -114,3 +114,22 @@ Emphasis _all_ __four__ *possible* **ways**. Also in the middle of very**long**w
 -----
 
 And now something completely different.
+
+![Alt text](http://www.placecage.com/200/200)
+
+Some text.
+
+![Alt text](http://www.placecage.com/200/200 "Optional title")
+
+Some text.
+
+![Alt text][imageid1]
+
+Some text.
+
+![Alt text][imageid2]
+
+Some text.
+
+[imageid1]: http://www.placecage.com/200/200
+[imageid2]: http://www.placecage.com/200/200 "Optional title"

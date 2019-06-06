@@ -2,6 +2,7 @@ const {renderEmphasis} = require('./emphasis.js')
 const {renderHeading} = require('./heading.js')
 const {renderHtml} = require('./html.js')
 const {renderInlineCode} = require('./inlineCode.js')
+const {renderImage} = require('./image.js')
 const {renderList} = require('./list.js')
 const {renderParagraph} = require('./paragraph.js')
 const {renderStrong} = require('./strong.js')
@@ -13,6 +14,7 @@ module.exports = {
   renderHeading,
   renderHtml,
   renderInlineCode,
+  renderImage,
   renderList,
   renderParagraph,
   renderStrong,
