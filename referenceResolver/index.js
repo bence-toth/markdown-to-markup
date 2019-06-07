@@ -16,6 +16,18 @@ const resolveReferences = tokens => {
         url
       }
     }
+    if (type === 'linkReference') {
+      const {title, url} = definitions.find(
+        ({identifier: linkId}) => (linkId === id)
+      )
+      return {
+        type: 'link',
+        position,
+        children: children.map(resolveReferencesInSubtree),
+        title,
+        url
+      }
+    }
     if (children) {
       return {
         ...token,
