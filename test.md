@@ -187,4 +187,8 @@ See my [About](/about/) page for details.
 
 This is [an example reference-style link][id].
 
+[This link **has emphasis**](http://example.net/) has no title attribute.
+
+[![Alt text](http://www.placecage.com/200/200)](http://example.net/)
+
 [id]: http://example.com/  "Optional Title Here"
