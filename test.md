@@ -192,3 +192,7 @@ This is [an example reference-style link][id].
 [![Alt text](http://www.placecage.com/200/200)](http://example.net/)
 
 [id]: http://example.com/  "Optional Title Here"
+
+Auto link test http://example.com/
+
+Auto link test with email@address.com
