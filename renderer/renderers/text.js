@@ -6,6 +6,6 @@ const turnEmailAddressesToLinks = text => text.replace(
 )
 
 const renderText = ({token: {value}}) =>
-turnEmailAddressesToLinks(value)
+  turnEmailAddressesToLinks(value)
 
 module.exports = {renderText}
