@@ -1,3 +1,4 @@
+const {renderBlockQuotation} = require('./blockQuotation.js')
 const {renderEmphasis} = require('./emphasis.js')
 const {renderHeading} = require('./heading.js')
 const {renderHtml} = require('./html.js')
@@ -10,6 +11,7 @@ const {renderText} = require('./text.js')
 const {renderThematicBreak} = require('./thematicBreak.js')
 
 module.exports = {
+  renderBlockQuotation,
   renderEmphasis,
   renderHeading,
   renderHtml,
