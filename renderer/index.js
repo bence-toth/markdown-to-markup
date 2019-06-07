@@ -8,6 +8,7 @@ const {
   renderImage,
   renderInlineCode,
   renderList,
+  renderLink,
   renderParagraph,
   renderStrong,
   renderText,
@@ -33,6 +34,10 @@ const tokenToMarkup = token => {
     html: () => renderHtml({token}),
     image: () => renderImage({token}),
     inlineCode: () => renderInlineCode({token}),
+    link: () => renderLink({
+      token,
+      tokenToMarkup
+    }),
     list: () => renderList({
       token,
       tokenToMarkup

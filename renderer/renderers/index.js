@@ -4,6 +4,7 @@ const {renderHeading} = require('./heading.js')
 const {renderHtml} = require('./html.js')
 const {renderInlineCode} = require('./inlineCode.js')
 const {renderImage} = require('./image.js')
+const {renderLink} = require('./link.js')
 const {renderList} = require('./list.js')
 const {renderParagraph} = require('./paragraph.js')
 const {renderStrong} = require('./strong.js')
@@ -17,6 +18,7 @@ module.exports = {
   renderHtml,
   renderInlineCode,
   renderImage,
+  renderLink,
   renderList,
   renderParagraph,
   renderStrong,

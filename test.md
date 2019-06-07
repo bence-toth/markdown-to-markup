@@ -16,6 +16,8 @@ Example heading 2
 
 ###### Example heading 6
 
+-----
+
 Example paragraph.
 
 Paragraph with `inline code`.
@@ -25,6 +27,8 @@ Paragraph with ``literal backtick (`) hack``. Neat.
 Please don't use the `&lt;marquee&gt;` tag. `// TODO: this should work with > and <`
 
 `&amp;#8212;` is the decimal-encoded equivalent of `&amp;mdash;`. `// TODO: this should work with &`
+
+-----
 
 - List
 - Items
@@ -107,7 +111,11 @@ Please don't use the `&lt;marquee&gt;` tag. `// TODO: this should work with > an
 
 1986\. What a great season.
 
+-----
+
 <div style='color: red;'>Look Mom, HTML!</div>
+
+-----
 
 Emphasis _all_ __four__ *possible* **ways**. Also in the middle of very**long**words.
 
@@ -133,6 +141,8 @@ Some text.
 
 [imageid1]: http://www.placecage.com/200/200
 [imageid2]: http://www.placecage.com/200/200 "Optional title"
+
+-----
 
 > This is a blockquote with two paragraphs. Lorem ipsum dolor sit amet,
 > consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus.
@@ -166,3 +176,19 @@ Some text
 > 2. This is the second list item.
 >
 > Some paragraph with `inline code` and **emphasis**
+
+-----
+
+This is [an example inline link](http://example.com/ "Title").
+
+[This link](http://example.net/) has no title attribute.
+
+See my [About](/about/) page for details.
+
+This is [an example reference-style link][id].
+
+[This link **has emphasis**](http://example.net/) has no title attribute.
+
+[![Alt text](http://www.placecage.com/200/200)](http://example.net/)
+
+[id]: http://example.com/  "Optional Title Here"
