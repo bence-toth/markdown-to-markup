@@ -2,6 +2,7 @@ const headingLevelOffset = 0
 
 const {
   renderBlockQuotation,
+  renderCodeBlock,
   renderEmphasis,
   renderHeading,
   renderHtml,
@@ -21,6 +22,9 @@ const tokenToMarkup = token => {
     blockquote: () => renderBlockQuotation({
       token,
       tokenToMarkup
+    }),
+    code: () => renderCodeBlock({
+      token
     }),
     emphasis: () => renderEmphasis({
       token,
