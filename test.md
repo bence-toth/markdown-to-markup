@@ -196,3 +196,24 @@ This is [an example reference-style link][id].
 Auto link test http://example.com/
 
 Auto link test with email@address.com
+
+---
+
+This is a normal paragraph:
+
+    This is a code block.
+
+Here is an example of AppleScript:
+
+    tell application "Foo"
+        beep
+    end tell
+
+Here is an example of JavaScript:
+```js
+const numbers = [1, 2, 3]
+const doubles = numbers
+    .map(
+        number => number * 2
+    )
+```
