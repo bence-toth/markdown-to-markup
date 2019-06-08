@@ -222,28 +222,28 @@ This is a normal paragraph:
 Here is an example of AppleScript:
 
     tell application "Foo"
-        beep
+      beep
     end tell
 
 Here is an example of JavaScript:
 ```js
 const numbers = [1, 2, 3]
 const doubles = numbers
-    .map(
-        number => number * 2
-    )
+  .map(
+    number => number * 2
+  )
 ```
 
 ```html
 <div>
-    <p>Encoded HTML entities, no&nbsp;breaks.</p>
-    <script>
-        const numbers = [1, 2, 3]
-        const doubles = numbers
-            .map(
-                number => number * 2
-            )
-    </script>
+  <p>Encoded HTML entities, no&nbsp;breaks.</p>
+  <script>
+    const numbers = [1, 2, 3]
+    const doubles = numbers
+      .map(
+        number => number * 2
+      )
+  </script>
 </div>
 ```
 
