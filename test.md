@@ -246,3 +246,29 @@ const doubles = numbers
     </script>
 </div>
 ```
+
+---
+
+## Backslash escaping
+
+\# Not a heading
+
+\*Not an emphasis\*
+
+\+ Not a list
+\+ Still not a list
+
+\* Not a list
+\* Still not a list
+
+\- Not a list
+\- Still not a list
+
+\> Not a blockquote
+\> Not a blockquote
+
+This is \[not a lint link](http://example.com/ "Title").
+
+\!\[Not an image](http://www.placecage.com/200/200)
+
+1986\. What a great season.
