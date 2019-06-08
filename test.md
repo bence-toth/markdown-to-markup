@@ -2,7 +2,7 @@
 
 ## Headings
 
-#Example heading 1
+# Example heading 1
 
 Example heading 1
 =================
