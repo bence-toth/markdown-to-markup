@@ -1,4 +1,8 @@
-# Example heading 1
+# Markdown example
+
+## Headings
+
+#Example heading 1
 
 Example heading 1
 =================
@@ -18,6 +22,8 @@ Example heading 2
 
 -----
 
+## Paragraphs
+
 Example paragraph.
 
 Paragraph with `inline code`.
@@ -27,6 +33,8 @@ Paragraph with ``literal backtick (`) hack``. Neat.
 Encoded HTML entities: `<div>no&nbsp;breaks</div>`.
 
 -----
+
+## Lists
 
 - List
 - Items
@@ -107,19 +115,23 @@ Encoded HTML entities: `<div>no&nbsp;breaks</div>`.
 
 2. Another item in the same list.
 
-1986\. What a great season.
-
 -----
+
+## HTML
 
 <div style='color: red;'>Look Mom, HTML!</div>
 
 -----
 
+## Emphasis
+
 Emphasis _all_ __four__ *possible* **ways**. Also in the middle of very**long**words.
+
+## Thematic break
 
 -----
 
-And now something completely different.
+## Images
 
 ![Alt text](http://www.placecage.com/200/200)
 
@@ -141,6 +153,8 @@ Some text.
 [imageid2]: http://www.placecage.com/200/200 "Optional title"
 
 -----
+
+## Block quotations
 
 > This is a blockquote with two paragraphs. Lorem ipsum dolor sit amet,
 > consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus.
@@ -177,6 +191,8 @@ Some text
 
 -----
 
+## Links
+
 This is [an example inline link](http://example.com/ "Title").
 
 [This link](http://example.net/) has no title attribute.
@@ -196,6 +212,8 @@ Auto link test http://example.com/
 Auto link test with email@address.com
 
 ---
+
+## Code blocks
 
 This is a normal paragraph:
 
@@ -228,3 +246,29 @@ const doubles = numbers
     </script>
 </div>
 ```
+
+---
+
+## Backslash escaping
+
+\# Not a heading
+
+\*Not an emphasis\*
+
+\+ Not a list
+\+ Still not a list
+
+\* Not a list
+\* Still not a list
+
+\- Not a list
+\- Still not a list
+
+\> Not a blockquote
+\> Not a blockquote
+
+This is \[not a lint link](http://example.com/ "Title").
+
+\!\[Not an image](http://www.placecage.com/200/200)
+
+1986\. What a great season.
