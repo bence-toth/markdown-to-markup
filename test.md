@@ -24,9 +24,7 @@ Paragraph with `inline code`.
 
 Paragraph with ``literal backtick (`) hack``. Neat.
 
-Please don't use the `&lt;marquee&gt;` tag. `// TODO: this should work with > and <`
-
-`&amp;#8212;` is the decimal-encoded equivalent of `&amp;mdash;`. `// TODO: this should work with &`
+Encoded HTML entities: `<div>no&nbsp;breaks</div>`.
 
 -----
 
@@ -216,4 +214,17 @@ const doubles = numbers
     .map(
         number => number * 2
     )
+```
+
+```html
+<div>
+    <p>Encoded HTML entities, no&nbsp;breaks.</p>
+    <script>
+        const numbers = [1, 2, 3]
+        const doubles = numbers
+            .map(
+                number => number * 2
+            )
+    </script>
+</div>
 ```
