@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "author": "",
   "license": "MIT",
@@ -14,5 +14,8 @@
     "prismjs": "^1.16.0",
     "remark-parse": "^6.0.3",
     "unified": "^7.1.0"
+  },
+  "devDependencies": {
+    "jest": "^24.8.0"
   }
 }
