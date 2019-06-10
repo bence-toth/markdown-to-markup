@@ -9,7 +9,7 @@ fs.readFile('test.md', 'utf8', (error, markdown) => {
         console.err(error)
       }
       else {
-        console.log('HTML content was successfully written to index.html.\n')
+        console.log('HTML content was successfully written to test.html.\n')
       }
     })
   }
