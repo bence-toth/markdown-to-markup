@@ -18,5 +18,16 @@
   "devDependencies": {
     "jest": "^24.8.0",
     "jsdom": "^15.1.1"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "*.js",
+      "**/*.js",
+      "!**/node_modules/**"
+    ],
+    "coverageReporters": [
+      "text"
+    ]
   }
 }
