@@ -1,6 +1,34 @@
 const {markdownToMarkup} = require('./index')
 const {JSDOM} = require('jsdom')
 
+describe('Emphasis', () => {
+  it('should render correctly with every syntax', () => {
+    const textContent = 'emphasis'
+    const paragraphs = [
+      `Some _${textContent}_ here.`,
+      `Some *${textContent}* here.`,
+      `Some __${textContent}__ here.`,
+      `Some **${textContent}** here.`
+    ]
+    paragraphs.map((paragraph, paragraphIndex) => {
+      const dom = new JSDOM(
+        `<!DOCTYPE html>
+        <div id="root">
+          ${markdownToMarkup(paragraph)}
+        </div>`
+      )
+      const root = dom.window.document.getElementById('root')
+      expect(root.children.length).toBe(1)
+      const paragraphNode = root.children[0]
+      expect(paragraphNode.children.length).toBe(1)
+      const emphasisNode = root.children[0].children[0]
+      const expectedTagName = (paragraphIndex < 2) ? 'EM' : 'STRONG'
+      expect(emphasisNode.tagName).toBe(expectedTagName)
+      expect(emphasisNode.textContent).toBe(textContent)
+    })
+  })
+})
+
 describe('Headings', () => {
   it('with # syntax should render correctly', () => {
     const text = 'Heading'
@@ -65,7 +93,6 @@ describe('Thematic break', () => {
 // Simple blockquote
 // Blockquote with embedded markdown
 // Code block (syntax highlighting, copying to clipboard)
-// Emphasis, strong
 // Headings with embedded markdown
 // Free HTML
 // Image with and without title
