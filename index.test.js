@@ -13,7 +13,12 @@ describe('Headings', () => {
       `###### ${text}`
     ]
     headings.map((heading, headingIndex) => {
-      const dom = new JSDOM(`<!DOCTYPE html><div id="root">${markdownToMarkup(heading)}</div>`)
+      const dom = new JSDOM(
+        `<!DOCTYPE html>
+        <div id="root">
+          ${markdownToMarkup(heading)}
+        </div>`
+      )
       const root = dom.window.document.getElementById('root')
       expect(root.children.length).toBe(1)
       expect(root.children[0].tagName).toBe(`H${headingIndex + 1}`)
@@ -28,7 +33,12 @@ describe('Headings', () => {
       `${text}\n-------`,
     ]
     headings.map((heading, headingIndex) => {
-      const dom = new JSDOM(`<!DOCTYPE html><div id="root">${markdownToMarkup(heading)}</div>`)
+      const dom = new JSDOM(
+        `<!DOCTYPE html>
+        <div id="root">
+          ${markdownToMarkup(heading)}
+        </div>`
+      )
       const root = dom.window.document.getElementById('root')
       expect(root.children.length).toBe(1)
       expect(root.children[0].tagName).toBe(`H${headingIndex + 1}`)
@@ -40,9 +50,13 @@ describe('Headings', () => {
 describe('Thematic break', () => {
   it('should render correctly', () => {
     const markdown = 'Some text\n\n-----\n\nSome more text'
-    const dom = new JSDOM(`<!DOCTYPE html><div id="root">${markdownToMarkup(markdown)}</div>`)
-    const root = dom.window.document.getElementById('root')
-    console.log(root.innerHTML)
+    const dom = new JSDOM(
+      `<!DOCTYPE html>
+      <div id="root">
+        ${markdownToMarkup(markdown)}
+      </div>`
+    )
+  const root = dom.window.document.getElementById('root')
     expect(root.children.length).toBe(3)
     expect(root.children[1].tagName).toBe('HR')
   })
