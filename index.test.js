@@ -37,3 +37,26 @@ describe('Headings', () => {
   })
 })
 
+// Simple blockquote
+// Blockquote with embedded markdown
+// Code block (syntax highlighting, copying to clipboard)
+// Emphasis, strong
+// Headings with embedded markdown
+// Free HTML
+// Image with and without title
+// Inline code
+// Simple link
+// Link with embedded markdown
+// Simple paragraph
+// Paragraph with embedded markdown
+// Danger, warning, notice boxes
+// Ordered list of simple paragraphs
+// Ordered list of paragraphs with embedded markdown
+// Unordered list of simple paragraphs
+// Unordered list of paragraphs with embedded markdown
+// Lists in lists, lists in lists in lists
+// Auto links
+// Thematic break
+// Reference resolver - Simple link
+// Reference resolver - Link with embedded markdown
+// Reference resolver - Images with and without title
