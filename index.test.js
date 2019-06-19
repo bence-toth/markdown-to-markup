@@ -75,6 +75,26 @@ describe('Headings', () => {
   })
 })
 
+describe('Inline', () => {
+  it('should render correctly', () => {
+    const textContent = 'run()'
+    const markdown = `You can just call \`${textContent}\` to start.`
+    const dom = new JSDOM(
+      `<!DOCTYPE html>
+      <div id="root">
+        ${markdownToMarkup(markdown)}
+      </div>`
+    )
+    const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(1)
+    const paragraphNode = root.children[0]
+    expect(paragraphNode.children.length).toBe(1)
+    const codeNode = root.children[0].children[0]
+    expect(codeNode.tagName).toBe('CODE')
+    expect(codeNode.textContent).toBe(textContent)
+  })
+})
+
 describe('Thematic break', () => {
   it('should render correctly', () => {
     const markdown = 'Some text\n\n-----\n\nSome more text'
@@ -96,7 +116,6 @@ describe('Thematic break', () => {
 // Headings with embedded markdown
 // Free HTML
 // Image with and without title
-// Inline code
 // Simple link
 // Link with embedded markdown
 // Simple paragraph
