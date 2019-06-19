@@ -37,6 +37,17 @@ describe('Headings', () => {
   })
 })
 
+describe('Thematic break', () => {
+  it('should render correctly', () => {
+    const markdown = 'Some text\n\n-----\n\nSome more text'
+    const dom = new JSDOM(`<!DOCTYPE html><div id="root">${markdownToMarkup(markdown)}</div>`)
+    const root = dom.window.document.getElementById('root')
+    console.log(root.innerHTML)
+    expect(root.children.length).toBe(3)
+    expect(root.children[1].tagName).toBe('HR')
+  })
+})
+
 // Simple blockquote
 // Blockquote with embedded markdown
 // Code block (syntax highlighting, copying to clipboard)
@@ -56,7 +67,6 @@ describe('Headings', () => {
 // Unordered list of paragraphs with embedded markdown
 // Lists in lists, lists in lists in lists
 // Auto links
-// Thematic break
 // Reference resolver - Simple link
 // Reference resolver - Link with embedded markdown
 // Reference resolver - Images with and without title
