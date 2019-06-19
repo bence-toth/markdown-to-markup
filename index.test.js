@@ -75,6 +75,32 @@ describe('Headings', () => {
   })
 })
 
+describe('HTML code', () => {
+  it('should render intact', () => {
+    const delContent = 'custom HTML'
+    const smallContent = 'not be a problem'
+    const markdown =
+      `Some <del>${delContent}</del> should`
+        + `<small>${smallContent}</small> at all.`
+    const dom = new JSDOM(
+      `<!DOCTYPE html>
+      <div id="root">
+        ${markdownToMarkup(markdown)}
+      </div>`
+    )
+    const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(1)
+    const paragraphNode = root.children[0]
+    expect(paragraphNode.children.length).toBe(2)
+    const delNode = root.children[0].children[0]
+    expect(delNode.tagName).toBe('DEL')
+    expect(delNode.textContent).toBe(delContent)
+    const smallNode = root.children[0].children[1]
+    expect(smallNode.tagName).toBe('SMALL')
+    expect(smallNode.textContent).toBe(smallContent)
+  })
+})
+
 describe('Inline', () => {
   it('should render correctly', () => {
     const textContent = 'run()'
@@ -114,7 +140,6 @@ describe('Thematic break', () => {
 // Blockquote with embedded markdown
 // Code block (syntax highlighting, copying to clipboard)
 // Headings with embedded markdown
-// Free HTML
 // Image with and without title
 // Simple link
 // Link with embedded markdown
