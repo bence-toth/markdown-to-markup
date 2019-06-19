@@ -1,27 +1,36 @@
 const {markdownToMarkup} = require('./index')
+const {JSDOM} = require('jsdom')
 
-test('Renders headings correctly', () => {
+test('Renders simple headings correctly', () => {
   const text = 'Heading'
   const headings = [
-    [`# ${text}`, `<h1>${text}</h1>`],
-    [`## ${text}`, `<h2>${text}</h2>`],
-    [`### ${text}`, `<h3>${text}</h3>`],
-    [`#### ${text}`, `<h4>${text}</h4>`],
-    [`##### ${text}`, `<h5>${text}</h5>`],
-    [`###### ${text}`, `<h6>${text}</h6>`]
+    `# ${text}`,
+    `## ${text}`,
+    `### ${text}`,
+    `#### ${text}`,
+    `##### ${text}`,
+    `###### ${text}`
   ]
-  headings.map(([markdown, markup]) => {
-    expect(markdownToMarkup(markdown)).toBe(markup)
+  headings.map((heading, headingIndex) => {
+    const dom = new JSDOM(`<!DOCTYPE html><div id="root">${markdownToMarkup(heading)}</div>`)
+    const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(1)
+    expect(root.children[0].tagName).toBe(`H${headingIndex + 1}`)
+    expect(root.children[0].textContent).toBe(text)
   })
 })
 
-test('Renders underscore headings correctly', () => {
+test('Renders simple underscore headings correctly', () => {
   const text = 'Heading'
   const headings = [
-    [`${text}\n=======`, `<h1>${text}</h1>`],
-    [`${text}\n-------`, `<h2>${text}</h2>`]
+    `${text}\n=======`,
+    `${text}\n-------`,
   ]
-  headings.map(([markdown, markup]) => {
-    expect(markdownToMarkup(markdown)).toBe(markup)
+  headings.map((heading, headingIndex) => {
+    const dom = new JSDOM(`<!DOCTYPE html><div id="root">${markdownToMarkup(heading)}</div>`)
+    const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(1)
+    expect(root.children[0].tagName).toBe(`H${headingIndex + 1}`)
+    expect(root.children[0].textContent).toBe(text)
   })
 })
