@@ -1,6 +1,27 @@
 const {markdownToMarkup} = require('./index')
 const {JSDOM} = require('jsdom')
 
+describe('Blockquote', () => {
+  it('should render correctly', () => {
+    const textContent = 'This is a blockquote.'
+    const markdown = `> ${textContent}`
+    const dom = new JSDOM(
+      `<!DOCTYPE html>
+      <div id="root">
+        ${markdownToMarkup(markdown)}
+      </div>`
+    )
+    const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(1)
+    const blockquoteNode = root.children[0]
+    expect(blockquoteNode.tagName.toLowerCase()).toBe('blockquote')
+    expect(blockquoteNode.children.length).toBe(1)
+    const paragraphNode = blockquoteNode.children[0]
+    expect(paragraphNode.tagName.toLowerCase()).toBe('p')
+    expect(paragraphNode.textContent).toBe(textContent)
+  })
+})
+
 describe('Emphasis', () => {
   it('should render correctly with every syntax', () => {
     const textContent = 'emphasis'
@@ -133,27 +154,6 @@ describe('Thematic break', () => {
   const root = dom.window.document.getElementById('root')
     expect(root.children.length).toBe(3)
     expect(root.children[1].tagName.toLowerCase()).toBe('hr')
-  })
-})
-
-describe('Blockquote', () => {
-  it('should render correctly', () => {
-    const textContent = 'This is a blockquote.'
-    const markdown = `> ${textContent}`
-    const dom = new JSDOM(
-      `<!DOCTYPE html>
-      <div id="root">
-        ${markdownToMarkup(markdown)}
-      </div>`
-    )
-    const root = dom.window.document.getElementById('root')
-    expect(root.children.length).toBe(1)
-    const blockquoteNode = root.children[0]
-    expect(blockquoteNode.tagName.toLowerCase()).toBe('blockquote')
-    expect(blockquoteNode.children.length).toBe(1)
-    const paragraphNode = blockquoteNode.children[0]
-    expect(paragraphNode.tagName.toLowerCase()).toBe('p')
-    expect(paragraphNode.textContent).toBe(textContent)
   })
 })
 
