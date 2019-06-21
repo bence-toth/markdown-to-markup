@@ -142,6 +142,22 @@ describe('Inline', () => {
   })
 })
 
+describe('Paragraph', () => {
+  it('should render correctly', () => {
+    const textContent = 'Some text'
+    const dom = new JSDOM(
+      `<!DOCTYPE html>
+      <div id="root">
+        ${markdownToMarkup(textContent)}
+      </div>`
+    )
+  const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(1)
+    expect(root.children[0].tagName.toLowerCase()).toBe('p')
+    expect(root.children[0].textContent).toBe(textContent)
+  })
+})
+
 describe('Thematic break', () => {
   it('should render correctly', () => {
     const markdown = 'Some text\n\n-----\n\nSome more text'
@@ -163,7 +179,6 @@ describe('Thematic break', () => {
 // Image with and without title
 // Simple link
 // Link with embedded markdown
-// Simple paragraph
 // Paragraph with embedded markdown
 // Danger, warning, notice boxes
 // Ordered list of simple paragraphs
