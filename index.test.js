@@ -22,8 +22,8 @@ describe('Emphasis', () => {
       const paragraphNode = root.children[0]
       expect(paragraphNode.children.length).toBe(1)
       const emphasisNode = root.children[0].children[0]
-      const expectedTagName = (paragraphIndex < 2) ? 'EM' : 'STRONG'
-      expect(emphasisNode.tagName).toBe(expectedTagName)
+      const expectedTagName = (paragraphIndex < 2) ? 'em' : 'strong'
+      expect(emphasisNode.tagName.toLowerCase()).toBe(expectedTagName)
       expect(emphasisNode.textContent).toBe(textContent)
     })
   })
@@ -49,7 +49,7 @@ describe('Headings', () => {
       )
       const root = dom.window.document.getElementById('root')
       expect(root.children.length).toBe(1)
-      expect(root.children[0].tagName).toBe(`H${headingIndex + 1}`)
+      expect(root.children[0].tagName.toLowerCase()).toBe(`h${headingIndex + 1}`)
       expect(root.children[0].textContent).toBe(text)
     })
   })
@@ -93,10 +93,10 @@ describe('HTML code', () => {
     const paragraphNode = root.children[0]
     expect(paragraphNode.children.length).toBe(2)
     const delNode = root.children[0].children[0]
-    expect(delNode.tagName).toBe('DEL')
+    expect(delNode.tagName.toLowerCase()).toBe('del')
     expect(delNode.textContent).toBe(delContent)
     const smallNode = root.children[0].children[1]
-    expect(smallNode.tagName).toBe('SMALL')
+    expect(smallNode.tagName.toLowerCase()).toBe('small')
     expect(smallNode.textContent).toBe(smallContent)
   })
 })
@@ -132,11 +132,31 @@ describe('Thematic break', () => {
     )
   const root = dom.window.document.getElementById('root')
     expect(root.children.length).toBe(3)
-    expect(root.children[1].tagName).toBe('HR')
+    expect(root.children[1].tagName.toLowerCase()).toBe('hr')
   })
 })
 
-// Simple blockquote
+describe('Blockquote', () => {
+  it('should render correctly', () => {
+    const textContent = 'This is a blockquote.'
+    const markdown = `> ${textContent}`
+    const dom = new JSDOM(
+      `<!DOCTYPE html>
+      <div id="root">
+        ${markdownToMarkup(markdown)}
+      </div>`
+    )
+    const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(1)
+    const blockquoteNode = root.children[0]
+    expect(blockquoteNode.tagName.toLowerCase()).toBe('blockquote')
+    expect(blockquoteNode.children.length).toBe(1)
+    const paragraphNode = blockquoteNode.children[0]
+    expect(paragraphNode.tagName.toLowerCase()).toBe('p')
+    expect(paragraphNode.textContent).toBe(textContent)
+  })
+})
+
 // Blockquote with embedded markdown
 // Code block (syntax highlighting, copying to clipboard)
 // Headings with embedded markdown
