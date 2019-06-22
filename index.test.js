@@ -181,7 +181,6 @@ describe('Inline code', () => {
 // TODO: Link with embedded markdown (with and without title)
 // TODO: Reference resolver - Simple link
 // TODO: Reference resolver - Link with embedded markdown
-// TODO: Auto links
 describe('Link', () => {
   it('should render correctly', () => {
     const href = 'https://github.com/'
@@ -227,6 +226,46 @@ describe('Link', () => {
     expect(anchorNode.textContent).toBe(textContent)
     expect(anchorNode.href).toBe(href)
     expect(anchorNode.title).toBe(title)
+  })
+
+  it('should render correctly with auto link', () => {
+    const [start, href, end] = ['You should visit', 'https://github.com/', 'for cool stuff.']
+    const markdown = `${start} ${href} ${end}`
+    const dom = new JSDOM(
+      `<!DOCTYPE html>
+      <div id="root">
+        ${markdownToMarkup(markdown)}
+      </div>`
+    )
+    const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(1)
+    const paragraphNode = root.children[0]
+    expect(paragraphNode.children.length).toBe(1)
+    expect(paragraphNode.textContent).toBe(`${start} ${href} ${end}`)
+    const anchorNode = root.children[0].children[0]
+    expect(anchorNode.tagName.toLowerCase()).toBe('a')
+    expect(anchorNode.textContent).toBe(href)
+    expect(anchorNode.href).toBe(href)
+  })
+
+  it('should render correctly with auto email link', () => {
+    const [start, email, end] = ['You should write to', 'some.address@domain.com', 'for cool stuff.']
+    const markdown = `${start} ${email} ${end}`
+    const dom = new JSDOM(
+      `<!DOCTYPE html>
+      <div id="root">
+        ${markdownToMarkup(markdown)}
+      </div>`
+    )
+    const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(1)
+    const paragraphNode = root.children[0]
+    expect(paragraphNode.children.length).toBe(1)
+    expect(paragraphNode.textContent).toBe(`${start} ${email} ${end}`)
+    const anchorNode = root.children[0].children[0]
+    expect(anchorNode.tagName.toLowerCase()).toBe('a')
+    expect(anchorNode.textContent).toBe(email)
+    expect(anchorNode.href).toBe(`mailto:${email}`)
   })
 })
 
