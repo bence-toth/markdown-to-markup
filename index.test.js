@@ -52,14 +52,14 @@ describe('Emphasis', () => {
 
 describe('Headings', () => {
   it('with # syntax should render correctly', () => {
-    const text = 'Heading'
+    const textContent = 'Heading'
     const headings = [
-      `# ${text}`,
-      `## ${text}`,
-      `### ${text}`,
-      `#### ${text}`,
-      `##### ${text}`,
-      `###### ${text}`
+      `# ${textContent}`,
+      `## ${textContent}`,
+      `### ${textContent}`,
+      `#### ${textContent}`,
+      `##### ${textContent}`,
+      `###### ${textContent}`
     ]
     headings.map((heading, headingIndex) => {
       const dom = new JSDOM(
@@ -71,15 +71,15 @@ describe('Headings', () => {
       const root = dom.window.document.getElementById('root')
       expect(root.children.length).toBe(1)
       expect(root.children[0].tagName.toLowerCase()).toBe(`h${headingIndex + 1}`)
-      expect(root.children[0].textContent).toBe(text)
+      expect(root.children[0].textContent).toBe(textContent)
     })
   })
 
   it('with =/- syntax should render correctly', () => {
-    const text = 'Heading'
+    const textContent = 'Heading'
     const headings = [
-      `${text}\n=======`,
-      `${text}\n-------`,
+      `${textContent}\n=======`,
+      `${textContent}\n-------`,
     ]
     headings.map((heading, headingIndex) => {
       const dom = new JSDOM(
@@ -91,7 +91,37 @@ describe('Headings', () => {
       const root = dom.window.document.getElementById('root')
       expect(root.children.length).toBe(1)
       expect(root.children[0].tagName.toLowerCase()).toBe(`h${headingIndex + 1}`)
-      expect(root.children[0].textContent).toBe(text)
+      expect(root.children[0].textContent).toBe(textContent)
+    })
+  })
+
+  it('with nested markdown it should render correctly', () => {
+    const [start, emphasis, end] = ['Heading with', 'emphasis', 'inside']
+    const headingMarkdownContent = `${start} **${emphasis}** ${end}`
+    const headings = [
+      `# ${headingMarkdownContent}`,
+      `## ${headingMarkdownContent}`,
+      `### ${headingMarkdownContent}`,
+      `#### ${headingMarkdownContent}`,
+      `##### ${headingMarkdownContent}`,
+      `###### ${headingMarkdownContent}`
+    ]
+    headings.map((heading, headingIndex) => {
+      const dom = new JSDOM(
+        `<!DOCTYPE html>
+        <div id="root">
+          ${markdownToMarkup(heading)}
+        </div>`
+      )
+      const root = dom.window.document.getElementById('root')
+      expect(root.children.length).toBe(1)
+      const headingNode = root.children[0]
+      expect(headingNode.children.length).toBe(1)
+      expect(headingNode.tagName.toLowerCase()).toBe(`h${headingIndex + 1}`)
+      expect(headingNode.textContent).toBe(`${start} ${emphasis} ${end}`)
+      const emphasisNode = headingNode.children[0]
+      expect(emphasisNode.tagName.toLowerCase()).toBe('strong')
+      expect(emphasisNode.textContent).toBe(emphasis)
     })
   })
 })
@@ -113,10 +143,10 @@ describe('HTML code', () => {
     expect(root.children.length).toBe(1)
     const paragraphNode = root.children[0]
     expect(paragraphNode.children.length).toBe(2)
-    const delNode = root.children[0].children[0]
+    const delNode = paragraphNode.children[0]
     expect(delNode.tagName.toLowerCase()).toBe('del')
     expect(delNode.textContent).toBe(delContent)
-    const smallNode = root.children[0].children[1]
+    const smallNode = paragraphNode.children[1]
     expect(smallNode.tagName.toLowerCase()).toBe('small')
     expect(smallNode.textContent).toBe(smallContent)
   })
@@ -223,7 +253,6 @@ describe('Thematic break', () => {
 
 // Blockquote with embedded markdown
 // Code block (syntax highlighting, copying to clipboard)
-// Headings with embedded markdown
 // Image with and without title
 // Link with embedded markdown (with and without title)
 // Paragraph with embedded markdown
