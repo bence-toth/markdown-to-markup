@@ -90,7 +90,7 @@ describe('Headings', () => {
       )
       const root = dom.window.document.getElementById('root')
       expect(root.children.length).toBe(1)
-      expect(root.children[0].tagName).toBe(`H${headingIndex + 1}`)
+      expect(root.children[0].tagName.toLowerCase()).toBe(`h${headingIndex + 1}`)
       expect(root.children[0].textContent).toBe(text)
     })
   })
@@ -122,7 +122,55 @@ describe('HTML code', () => {
   })
 })
 
-describe('Inline', () => {
+describe('Link', () => {
+  it('should render correctly', () => {
+    const href = 'https://github.com/'
+    const textContent = 'Link'
+    const restOfTheParagraph = ' in a paragraph'
+    const markdown = `[${textContent}](${href})${restOfTheParagraph}`
+    const dom = new JSDOM(
+      `<!DOCTYPE html>
+      <div id="root">
+        ${markdownToMarkup(markdown)}
+      </div>`
+    )
+    const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(1)
+    const paragraphNode = root.children[0]
+    expect(paragraphNode.children.length).toBe(1)
+    expect(paragraphNode.textContent).toBe(`${textContent}${restOfTheParagraph}`)
+    const anchorNode = root.children[0].children[0]
+    expect(anchorNode.tagName.toLowerCase()).toBe('a')
+    expect(anchorNode.textContent).toBe(textContent)
+    expect(anchorNode.href).toBe(href)
+  })
+
+  it('should render correctly with title', () => {
+    const href = 'https://github.com/'
+    const textContent = 'Link'
+    const title = 'Link title'
+    const restOfTheParagraph = ' in a paragraph'
+    const markdown = `[${textContent}](${href} "${title}")${restOfTheParagraph}`
+    const dom = new JSDOM(
+      `<!DOCTYPE html>
+      <div id="root">
+        ${markdownToMarkup(markdown)}
+      </div>`
+    )
+    const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(1)
+    const paragraphNode = root.children[0]
+    expect(paragraphNode.children.length).toBe(1)
+    expect(paragraphNode.textContent).toBe(`${textContent}${restOfTheParagraph}`)
+    const anchorNode = root.children[0].children[0]
+    expect(anchorNode.tagName.toLowerCase()).toBe('a')
+    expect(anchorNode.textContent).toBe(textContent)
+    expect(anchorNode.href).toBe(href)
+    expect(anchorNode.title).toBe(title)
+  })
+})
+
+describe('Inline code', () => {
   it('should render correctly', () => {
     const textContent = 'run()'
     const markdown = `You can just call \`${textContent}\` to start.`
@@ -137,7 +185,7 @@ describe('Inline', () => {
     const paragraphNode = root.children[0]
     expect(paragraphNode.children.length).toBe(1)
     const codeNode = root.children[0].children[0]
-    expect(codeNode.tagName).toBe('CODE')
+    expect(codeNode.tagName.toLowerCase()).toBe('code')
     expect(codeNode.textContent).toBe(textContent)
   })
 })
@@ -177,8 +225,7 @@ describe('Thematic break', () => {
 // Code block (syntax highlighting, copying to clipboard)
 // Headings with embedded markdown
 // Image with and without title
-// Simple link
-// Link with embedded markdown
+// Link with embedded markdown (with and without title)
 // Paragraph with embedded markdown
 // Danger, warning, notice boxes
 // Ordered list of simple paragraphs
