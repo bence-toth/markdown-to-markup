@@ -2,6 +2,7 @@ const {markdownToMarkup} = require('./index')
 const {JSDOM} = require('jsdom')
 
 // TODO: Blockquote with embedded markdown
+// TODO: Blockquote with multiple paragraphs
 describe('Blockquote', () => {
   it('should render correctly', () => {
     const textContent = 'This is a blockquote.'
@@ -269,11 +270,107 @@ describe('Link', () => {
   })
 })
 
-// TODO: Ordered list of simple paragraphs
 // TODO: Ordered list of paragraphs with embedded markdown
-// TODO: Unordered list of simple paragraphs
 // TODO: Unordered list of paragraphs with embedded markdown
+// TODO: List with multiple paragraphs
 // TODO: Lists in lists, lists in lists in lists
+describe('List', () => {
+  it('should render ordered list correctly', () => {
+    const textContents = ['Some text', 'Some other text', 'Even more text']
+    const markdown = textContents
+      .map(text => `1. ${text}`)
+      .join('\n')
+    const dom = new JSDOM(
+      `<!DOCTYPE html>
+      <div id="root">
+        ${markdownToMarkup(markdown)}
+      </div>`
+    )
+    const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(1)
+    const listNode = root.children[0]
+    expect(listNode.tagName.toLowerCase()).toBe('ol')
+    expect(listNode.children.length).toBe(3)
+    Array.from(listNode.children).forEach((listItem, index) => {
+      expect(listItem.tagName.toLowerCase()).toBe('li')
+      expect(listItem.children.length).toBe(1)
+      expect(listItem.children[0].tagName.toLowerCase()).toBe('p')
+      expect(listItem.children[0].textContent).toBe(textContents[index])
+    })
+  })
+
+  it('should render unordered with * syntax list correctly', () => {
+    const textContents = ['Some text', 'Some other text', 'Even more text']
+    const markdown = textContents
+      .map(text => `* ${text}`)
+      .join('\n')
+    const dom = new JSDOM(
+      `<!DOCTYPE html>
+      <div id="root">
+        ${markdownToMarkup(markdown)}
+      </div>`
+    )
+    const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(1)
+    const listNode = root.children[0]
+    expect(listNode.tagName.toLowerCase()).toBe('ul')
+    expect(listNode.children.length).toBe(3)
+    Array.from(listNode.children).forEach((listItem, index) => {
+      expect(listItem.tagName.toLowerCase()).toBe('li')
+      expect(listItem.children.length).toBe(1)
+      expect(listItem.children[0].tagName.toLowerCase()).toBe('p')
+      expect(listItem.children[0].textContent).toBe(textContents[index])
+    })
+  })
+
+  it('should render unordered with - syntax list correctly', () => {
+    const textContents = ['Some text', 'Some other text', 'Even more text']
+    const markdown = textContents
+      .map(text => `- ${text}`)
+      .join('\n')
+    const dom = new JSDOM(
+      `<!DOCTYPE html>
+      <div id="root">
+        ${markdownToMarkup(markdown)}
+      </div>`
+    )
+    const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(1)
+    const listNode = root.children[0]
+    expect(listNode.tagName.toLowerCase()).toBe('ul')
+    expect(listNode.children.length).toBe(3)
+    Array.from(listNode.children).forEach((listItem, index) => {
+      expect(listItem.tagName.toLowerCase()).toBe('li')
+      expect(listItem.children.length).toBe(1)
+      expect(listItem.children[0].tagName.toLowerCase()).toBe('p')
+      expect(listItem.children[0].textContent).toBe(textContents[index])
+    })
+  })
+
+  it('should render unordered with + syntax list correctly', () => {
+    const textContents = ['Some text', 'Some other text', 'Even more text']
+    const markdown = textContents
+      .map(text => `+ ${text}`)
+      .join('\n')
+    const dom = new JSDOM(
+      `<!DOCTYPE html>
+      <div id="root">
+        ${markdownToMarkup(markdown)}
+      </div>`
+    )
+    const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(1)
+    const listNode = root.children[0]
+    expect(listNode.tagName.toLowerCase()).toBe('ul')
+    expect(listNode.children.length).toBe(3)
+    Array.from(listNode.children).forEach((listItem, index) => {
+      expect(listItem.tagName.toLowerCase()).toBe('li')
+      expect(listItem.children.length).toBe(1)
+      expect(listItem.children[0].tagName.toLowerCase()).toBe('p')
+      expect(listItem.children[0].textContent).toBe(textContents[index])
+    })
+  })
+})
 
 // TODO: Paragraph with embedded markdown
 // TODO: Danger, warning, notice boxes
@@ -307,3 +404,5 @@ describe('Thematic break', () => {
     expect(root.children[1].tagName.toLowerCase()).toBe('hr')
   })
 })
+
+// TODO: Backslash escaping
