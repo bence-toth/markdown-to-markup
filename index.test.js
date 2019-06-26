@@ -22,6 +22,29 @@ describe('Blockquote', () => {
     expect(paragraphNode.tagName.toLowerCase()).toBe('p')
     expect(paragraphNode.textContent).toBe(textContent)
   })
+
+  it('should render correctly with multiple paragraphs', () => {
+    const textContents = ['This is a paragraph.', 'This is another paragraph.']
+    const markdown = [textContents[0], '', textContents[1]]
+      .map(textContent => `> ${textContent}`)
+      .join('\n')
+    const dom = new JSDOM(
+      `<!DOCTYPE html>
+      <div id="root">
+        ${markdownToMarkup(markdown)}
+      </div>`
+    )
+    const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(1)
+    const blockquoteNode = root.children[0]
+    expect(blockquoteNode.tagName.toLowerCase()).toBe('blockquote')
+    expect(blockquoteNode.children.length).toBe(2)
+    const paragraphNodes = blockquoteNode.children
+    expect(paragraphNodes[0].tagName.toLowerCase()).toBe('p')
+    expect(paragraphNodes[0].textContent).toBe(textContents[0])
+    expect(paragraphNodes[1].tagName.toLowerCase()).toBe('p')
+    expect(paragraphNodes[1].textContent).toBe(textContents[1])
+  })
 })
 
 // TODO: Code block (syntax highlighting, copying to clipboard)
