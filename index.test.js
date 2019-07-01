@@ -202,8 +202,28 @@ describe('HTML code', () => {
   })
 })
 
-// TODO: Image with and without title
+// TODO: Image with title
 // TODO: Reference resolver - Images with and without title
+// describe('Image', () => {
+//   it('should render correctly', () => {
+//     const imageUrl = 'http://www.placecage.com/200/200'
+//     const altText = 'Alt text'
+//     const markdown = `![${altText}](${imageUrl})\n`
+//     const dom = new JSDOM(
+//       `<!DOCTYPE html>
+//       <div id="root">
+//         ${markdownToMarkup(markdown)}
+//       </div>`
+//     )
+//     const root = dom.window.document.getElementById('root')
+//     expect(root.children.length).toBe(1)
+//     const paragraphNode = root.children[0]
+//     expect(paragraphNode.children.length).toBe(1)
+//     const imageNode = paragraphNode.children[0]
+//     expect(imageNode.tagName.toLowerCase()).toBe('img')
+//     // TODO: Finish test case
+//   })
+// })
 
 describe('Inline code', () => {
   it('should render correctly', () => {
