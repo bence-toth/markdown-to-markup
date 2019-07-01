@@ -92,7 +92,7 @@ describe('Emphasis', () => {
       expect(root.children.length).toBe(1)
       const paragraphNode = root.children[0]
       expect(paragraphNode.children.length).toBe(1)
-      const emphasisNode = root.children[0].children[0]
+      const emphasisNode = paragraphNode.children[0]
       const expectedTagName = (paragraphIndex < 2) ? 'em' : 'strong'
       expect(emphasisNode.tagName.toLowerCase()).toBe(expectedTagName)
       expect(emphasisNode.textContent).toBe(textContent)
@@ -239,7 +239,7 @@ describe('Inline code', () => {
     expect(root.children.length).toBe(1)
     const paragraphNode = root.children[0]
     expect(paragraphNode.children.length).toBe(1)
-    const codeNode = root.children[0].children[0]
+    const codeNode = paragraphNode.children[0]
     expect(codeNode.tagName.toLowerCase()).toBe('code')
     expect(codeNode.textContent).toBe(textContent)
   })
@@ -265,7 +265,7 @@ describe('Link', () => {
     const paragraphNode = root.children[0]
     expect(paragraphNode.children.length).toBe(1)
     expect(paragraphNode.textContent).toBe(`${textContent}${restOfTheParagraph}`)
-    const anchorNode = root.children[0].children[0]
+    const anchorNode = paragraphNode.children[0]
     expect(anchorNode.tagName.toLowerCase()).toBe('a')
     expect(anchorNode.textContent).toBe(textContent)
     expect(anchorNode.href).toBe(href)
@@ -288,7 +288,7 @@ describe('Link', () => {
     const paragraphNode = root.children[0]
     expect(paragraphNode.children.length).toBe(1)
     expect(paragraphNode.textContent).toBe(`${textContent}${restOfTheParagraph}`)
-    const anchorNode = root.children[0].children[0]
+    const anchorNode = paragraphNode.children[0]
     expect(anchorNode.tagName.toLowerCase()).toBe('a')
     expect(anchorNode.textContent).toBe(textContent)
     expect(anchorNode.href).toBe(href)
@@ -309,7 +309,7 @@ describe('Link', () => {
     const paragraphNode = root.children[0]
     expect(paragraphNode.children.length).toBe(1)
     expect(paragraphNode.textContent).toBe(`${start} ${href} ${end}`)
-    const anchorNode = root.children[0].children[0]
+    const anchorNode = paragraphNode.children[0]
     expect(anchorNode.tagName.toLowerCase()).toBe('a')
     expect(anchorNode.textContent).toBe(href)
     expect(anchorNode.href).toBe(href)
@@ -329,7 +329,7 @@ describe('Link', () => {
     const paragraphNode = root.children[0]
     expect(paragraphNode.children.length).toBe(1)
     expect(paragraphNode.textContent).toBe(`${start} ${email} ${end}`)
-    const anchorNode = root.children[0].children[0]
+    const anchorNode = paragraphNode.children[0]
     expect(anchorNode.tagName.toLowerCase()).toBe('a')
     expect(anchorNode.textContent).toBe(email)
     expect(anchorNode.href).toBe(`mailto:${email}`)
