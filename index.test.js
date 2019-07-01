@@ -1,8 +1,6 @@
 const {markdownToMarkup} = require('./index')
 const {JSDOM} = require('jsdom')
 
-// TODO: Blockquote with embedded markdown
-// TODO: Blockquote with multiple paragraphs
 describe('Blockquote', () => {
   it('should render correctly', () => {
     const textContent = 'This is a blockquote.'
@@ -44,6 +42,31 @@ describe('Blockquote', () => {
     expect(paragraphNodes[0].textContent).toBe(textContents[0])
     expect(paragraphNodes[1].tagName.toLowerCase()).toBe('p')
     expect(paragraphNodes[1].textContent).toBe(textContents[1])
+  })
+
+  it('should render correctly with embedded markdown', () => {
+    const textContents = ['This is a blockquote', '.']
+    const emphasisTextContent = 'with emphasis'
+    const markdown = `> ${textContents[0]} **${emphasisTextContent}** ${textContents[1]}`
+    const dom = new JSDOM(
+      `<!DOCTYPE html>
+      <div id="root">
+        ${markdownToMarkup(markdown)}
+      </div>`
+    )
+    const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(1)
+    const blockquoteNode = root.children[0]
+    expect(blockquoteNode.tagName.toLowerCase()).toBe('blockquote')
+    expect(blockquoteNode.children.length).toBe(1)
+    const paragraphNode = blockquoteNode.children[0]
+    expect(paragraphNode.tagName.toLowerCase()).toBe('p')
+    const fullParagraphText = `${textContents[0]} ${emphasisTextContent} ${textContents[1]}`
+    expect(paragraphNode.textContent).toBe(fullParagraphText)
+    expect(paragraphNode.children.length).toBe(1)
+    const emphasisNode = paragraphNode.children[0]
+    expect(emphasisNode.tagName.toLowerCase()).toBe('strong')
+    expect(emphasisNode.textContent).toBe(emphasisTextContent)
   })
 })
 
