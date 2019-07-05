@@ -1,6 +1,7 @@
 const {renderBlockQuotation} = require('./blockQuotation.js')
 const {renderCodeBlock} = require('./codeBlock.js')
 const {renderEmphasis} = require('./emphasis.js')
+const {renderFigure} = require('./figure.js')
 const {renderHeading} = require('./heading.js')
 const {renderHtml} = require('./html.js')
 const {renderInlineCode} = require('./inlineCode.js')
@@ -16,6 +17,7 @@ module.exports = {
   renderBlockQuotation,
   renderCodeBlock,
   renderEmphasis,
+  renderFigure,
   renderHeading,
   renderHtml,
   renderInlineCode,
