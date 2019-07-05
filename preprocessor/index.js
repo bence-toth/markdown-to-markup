@@ -1,11 +1,11 @@
-const isFigure = token => (
-  (token.type === 'paragraph')
-    && (token.children && (token.children.length === 1))
-    && (token.children[0].type === 'image')
+const isFigure = ({type, children}) => (
+  (type === 'paragraph')
+    && (children && (children.length === 1))
+    && (children[0].type === 'image')
 )
 
-const transformFigure = token => ({
-  ...(token.children[0]),
+const transformFigure = ({children}) => ({
+  ...children[0],
   type: 'figure'
 })
 
