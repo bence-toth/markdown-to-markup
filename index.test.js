@@ -419,7 +419,7 @@ describe('List', () => {
     it('should render correctly with multiple paragraphs', () => {
       const subParagraphs = [
         'This is the second paragraph in the list item.',
-        'Lorem ipsum dolor sit amet, consectetuer adipiscing elit.'
+        'It breaks in two lines for show.'
       ]
       const paragraphs = [
         'This is a list item with two paragraphs.',
@@ -691,7 +691,7 @@ describe('List', () => {
     it('should render correctly with * syntax with multiple paragraphs', () => {
       const subParagraphs = [
         'This is the second paragraph in the list item.',
-        'Lorem ipsum dolor sit amet, consectetuer adipiscing elit.'
+        'It breaks in two lines for show.'
       ]
       const paragraphs = [
         'This is a list item with two paragraphs.',
@@ -730,7 +730,7 @@ describe('List', () => {
     it('should render correctly with - syntax with multiple paragraphs', () => {
       const subParagraphs = [
         'This is the second paragraph in the list item.',
-        'Lorem ipsum dolor sit amet, consectetuer adipiscing elit.'
+        'It breaks in two lines for show.'
       ]
       const paragraphs = [
         'This is a list item with two paragraphs.',
@@ -769,7 +769,7 @@ describe('List', () => {
     it('should render correctly with + syntax with multiple paragraphs', () => {
       const subParagraphs = [
         'This is the second paragraph in the list item.',
-        'Lorem ipsum dolor sit amet, consectetuer adipiscing elit.'
+        'It breaks in two lines for show.'
       ]
       const paragraphs = [
         'This is a list item with two paragraphs.',
