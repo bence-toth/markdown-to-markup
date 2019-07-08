@@ -646,6 +646,45 @@ describe('List', () => {
     expect(secondListItem.children[0].children[0].tagName.toLowerCase()).toBe('em')
     expect(secondListItem.children[0].children[0].textContent).toBe(textContents[1].emphasis)
   })
+
+  it('should render ordered list with multiple paragraphs correctly', () => {
+    const subParagraphs = [
+      'This is the second paragraph in the list item.',
+      'Lorem ipsum dolor sit amet, consectetuer adipiscing elit.'
+    ]
+    const paragraphs = [
+      'This is a list item with two paragraphs.',
+      `${subParagraphs[0]}\n    ${subParagraphs[1]}`,
+      'Another item in the same list.'
+    ]
+    const markdown = `1.  ${paragraphs[0]}\n\n    ${paragraphs[1]}\n\n1.  ${paragraphs[2]}`
+    const dom = new JSDOM(
+      `<!DOCTYPE html>
+      <div id="root">
+        ${markdownToMarkup(markdown)}
+      </div>`
+    )
+    const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(1)
+    const listNode = root.children[0]
+    expect(listNode.tagName.toLowerCase()).toBe('ol')
+    expect(listNode.children.length).toBe(2)
+    const firstListItem = listNode.children[0]
+    expect(firstListItem.tagName.toLowerCase()).toBe('li')
+    expect(firstListItem.textContent).toBe(
+      `${paragraphs[0]}${subParagraphs[0]}\n${subParagraphs[1]}`
+    )
+    expect(firstListItem.children.length).toBe(2)
+    expect(firstListItem.children[0].tagName.toLowerCase()).toBe('p')
+    expect(firstListItem.children[0].textContent).toBe(paragraphs[0])
+    expect(firstListItem.children[1].tagName.toLowerCase()).toBe('p')
+    expect(firstListItem.children[1].textContent).toBe(paragraphs[1].replace('    ', ''))
+    const secondListItem = listNode.children[1]
+    expect(secondListItem.tagName.toLowerCase()).toBe('li')
+    expect(secondListItem.children.length).toBe(1)
+    expect(secondListItem.children[0].tagName.toLowerCase()).toBe('p')
+    expect(secondListItem.children[0].textContent).toBe(paragraphs[2])
+  })
 })
 
 // TODO: Paragraph with embedded markdown
