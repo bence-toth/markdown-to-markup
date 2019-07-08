@@ -336,8 +336,6 @@ describe('Link', () => {
   })
 })
 
-// TODO: Ordered list of paragraphs with embedded markdown
-// TODO: Unordered list of paragraphs with embedded markdown
 // TODO: List with multiple paragraphs
 // TODO: Lists in lists, lists in lists in lists
 describe('List', () => {
@@ -562,6 +560,59 @@ describe('List', () => {
     ]
     const markdown = markdownContents
       .map(text => `- ${text}`)
+      .join('\n')
+    const dom = new JSDOM(
+      `<!DOCTYPE html>
+      <div id="root">
+        ${markdownToMarkup(markdown)}
+      </div>`
+    )
+    const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(1)
+    const listNode = root.children[0]
+    expect(listNode.tagName.toLowerCase()).toBe('ul')
+    expect(listNode.children.length).toBe(2)
+    const firstListItem = listNode.children[0]
+    expect(firstListItem.tagName.toLowerCase()).toBe('li')
+    expect(firstListItem.textContent).toBe(
+      `${textContents[0].beginning} ${textContents[0].emphasis} ${textContents[0].end}`
+    )
+    expect(firstListItem.children.length).toBe(1)
+    expect(firstListItem.children[0].tagName.toLowerCase()).toBe('p')
+    expect(firstListItem.children[0].children.length).toBe(1)
+    expect(firstListItem.children[0].children[0].tagName.toLowerCase()).toBe('em')
+    expect(firstListItem.children[0].children[0].textContent).toBe(textContents[0].emphasis)
+    const secondListItem = listNode.children[0]
+    expect(secondListItem.tagName.toLowerCase()).toBe('li')
+    expect(secondListItem.textContent).toBe(
+      `${textContents[1].beginning} ${textContents[1].emphasis} ${textContents[1].end}`
+    )
+    expect(secondListItem.children.length).toBe(1)
+    expect(secondListItem.children[0].tagName.toLowerCase()).toBe('p')
+    expect(secondListItem.children[0].children.length).toBe(1)
+    expect(secondListItem.children[0].children[0].tagName.toLowerCase()).toBe('em')
+    expect(secondListItem.children[0].children[0].textContent).toBe(textContents[1].emphasis)
+  })
+
+  it('should render unordered list with + syntax and embedded markdown correctly', () => {
+    const textContents = [
+      {
+        beginning: 'Some text',
+        emphasis: 'with emphasis',
+        end: 'inside'
+      },
+      {
+        beginning: 'Some text',
+        emphasis: 'with emphasis',
+        end: 'inside'
+      }
+    ]
+    const markdownContents = [
+      `${textContents[0].beginning} *${textContents[0].emphasis}* ${textContents[0].end}`,
+      `${textContents[1].beginning} __${textContents[1].emphasis}__ ${textContents[1].end}`
+    ]
+    const markdown = markdownContents
+      .map(text => `+ ${text}`)
       .join('\n')
     const dom = new JSDOM(
       `<!DOCTYPE html>
