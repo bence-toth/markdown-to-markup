@@ -807,7 +807,6 @@ describe('List', () => {
   })
 })
 
-// TODO: Paragraph with embedded markdown
 // TODO: Danger, warning, notice boxes
 describe('Paragraph', () => {
   it('should render correctly', () => {
@@ -822,6 +821,29 @@ describe('Paragraph', () => {
     expect(root.children.length).toBe(1)
     expect(root.children[0].tagName.toLowerCase()).toBe('p')
     expect(root.children[0].textContent).toBe(textContent)
+  })
+
+  it('should render with embedded markdown correctly', () => {
+    const textContents = ['Some text', 'inside.']
+    const emphasisContent = 'with emphasis'
+    const textContent = `${textContents[0]} **${emphasisContent}** ${textContents[1]}`
+    const dom = new JSDOM(
+      `<!DOCTYPE html>
+      <div id="root">
+        ${markdownToMarkup(textContent)}
+      </div>`
+    )
+  const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(1)
+    const paragraphNode = root.children[0]
+    expect(paragraphNode.tagName.toLowerCase()).toBe('p')
+    expect(paragraphNode.textContent).toBe(
+      `${textContents[0]} ${emphasisContent} ${textContents[1]}`
+    )
+    expect(paragraphNode.children.length).toBe(1)
+    const emphasisNode = paragraphNode.children[0]
+    expect(emphasisNode.tagName.toLowerCase()).toBe('strong')
+    expect(emphasisNode.textContent).toBe(emphasisContent)
   })
 })
 
