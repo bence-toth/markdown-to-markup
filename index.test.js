@@ -338,468 +338,472 @@ describe('Link', () => {
 
 // TODO: Lists in lists, lists in lists in lists
 describe('List', () => {
-  it('should render ordered list correctly', () => {
-    const textContents = ['Some text', 'Some other text', 'Even more text']
-    const markdown = textContents
-      .map(text => `1. ${text}`)
-      .join('\n')
-    const dom = new JSDOM(
-      `<!DOCTYPE html>
-      <div id="root">
-        ${markdownToMarkup(markdown)}
-      </div>`
-    )
-    const root = dom.window.document.getElementById('root')
-    expect(root.children.length).toBe(1)
-    const listNode = root.children[0]
-    expect(listNode.tagName.toLowerCase()).toBe('ol')
-    expect(listNode.children.length).toBe(3)
-    Array.from(listNode.children).forEach((listItem, index) => {
-      expect(listItem.tagName.toLowerCase()).toBe('li')
-      expect(listItem.children.length).toBe(1)
-      expect(listItem.children[0].tagName.toLowerCase()).toBe('p')
-      expect(listItem.children[0].textContent).toBe(textContents[index])
+  describe('Ordered list', () => {
+    it('should render correctly', () => {
+      const textContents = ['Some text', 'Some other text', 'Even more text']
+      const markdown = textContents
+        .map(text => `1. ${text}`)
+        .join('\n')
+      const dom = new JSDOM(
+        `<!DOCTYPE html>
+        <div id="root">
+          ${markdownToMarkup(markdown)}
+        </div>`
+      )
+      const root = dom.window.document.getElementById('root')
+      expect(root.children.length).toBe(1)
+      const listNode = root.children[0]
+      expect(listNode.tagName.toLowerCase()).toBe('ol')
+      expect(listNode.children.length).toBe(3)
+      Array.from(listNode.children).forEach((listItem, index) => {
+        expect(listItem.tagName.toLowerCase()).toBe('li')
+        expect(listItem.children.length).toBe(1)
+        expect(listItem.children[0].tagName.toLowerCase()).toBe('p')
+        expect(listItem.children[0].textContent).toBe(textContents[index])
+      })
+    })
+
+    it('should render correctly with embedded markdown', () => {
+      const textContents = [
+        {
+          beginning: 'Some text',
+          emphasis: 'with emphasis',
+          end: 'inside'
+        },
+        {
+          beginning: 'Some text',
+          emphasis: 'with emphasis',
+          end: 'inside'
+        }
+      ]
+      const markdownContents = [
+        `${textContents[0].beginning} *${textContents[0].emphasis}* ${textContents[0].end}`,
+        `${textContents[1].beginning} __${textContents[1].emphasis}__ ${textContents[1].end}`
+      ]
+      const markdown = markdownContents
+        .map(text => `1. ${text}`)
+        .join('\n')
+      const dom = new JSDOM(
+        `<!DOCTYPE html>
+        <div id="root">
+          ${markdownToMarkup(markdown)}
+        </div>`
+      )
+      const root = dom.window.document.getElementById('root')
+      expect(root.children.length).toBe(1)
+      const listNode = root.children[0]
+      expect(listNode.tagName.toLowerCase()).toBe('ol')
+      expect(listNode.children.length).toBe(2)
+      const firstListItem = listNode.children[0]
+      expect(firstListItem.tagName.toLowerCase()).toBe('li')
+      expect(firstListItem.textContent).toBe(
+        `${textContents[0].beginning} ${textContents[0].emphasis} ${textContents[0].end}`
+      )
+      expect(firstListItem.children.length).toBe(1)
+      expect(firstListItem.children[0].tagName.toLowerCase()).toBe('p')
+      expect(firstListItem.children[0].children.length).toBe(1)
+      expect(firstListItem.children[0].children[0].tagName.toLowerCase()).toBe('em')
+      expect(firstListItem.children[0].children[0].textContent).toBe(textContents[0].emphasis)
+      const secondListItem = listNode.children[0]
+      expect(secondListItem.tagName.toLowerCase()).toBe('li')
+      expect(secondListItem.textContent).toBe(
+        `${textContents[1].beginning} ${textContents[1].emphasis} ${textContents[1].end}`
+      )
+      expect(secondListItem.children.length).toBe(1)
+      expect(secondListItem.children[0].tagName.toLowerCase()).toBe('p')
+      expect(secondListItem.children[0].children.length).toBe(1)
+      expect(secondListItem.children[0].children[0].tagName.toLowerCase()).toBe('em')
+      expect(secondListItem.children[0].children[0].textContent).toBe(textContents[1].emphasis)
+    })
+
+    it('should render correctly with multiple paragraphs', () => {
+      const subParagraphs = [
+        'This is the second paragraph in the list item.',
+        'Lorem ipsum dolor sit amet, consectetuer adipiscing elit.'
+      ]
+      const paragraphs = [
+        'This is a list item with two paragraphs.',
+        `${subParagraphs[0]}\n    ${subParagraphs[1]}`,
+        'Another item in the same list.'
+      ]
+      const markdown = `1.  ${paragraphs[0]}\n\n    ${paragraphs[1]}\n\n1.  ${paragraphs[2]}`
+      const dom = new JSDOM(
+        `<!DOCTYPE html>
+        <div id="root">
+          ${markdownToMarkup(markdown)}
+        </div>`
+      )
+      const root = dom.window.document.getElementById('root')
+      expect(root.children.length).toBe(1)
+      const listNode = root.children[0]
+      expect(listNode.tagName.toLowerCase()).toBe('ol')
+      expect(listNode.children.length).toBe(2)
+      const firstListItem = listNode.children[0]
+      expect(firstListItem.tagName.toLowerCase()).toBe('li')
+      expect(firstListItem.textContent).toBe(
+        `${paragraphs[0]}${subParagraphs[0]}\n${subParagraphs[1]}`
+      )
+      expect(firstListItem.children.length).toBe(2)
+      expect(firstListItem.children[0].tagName.toLowerCase()).toBe('p')
+      expect(firstListItem.children[0].textContent).toBe(paragraphs[0])
+      expect(firstListItem.children[1].tagName.toLowerCase()).toBe('p')
+      expect(firstListItem.children[1].textContent).toBe(paragraphs[1].replace('    ', ''))
+      const secondListItem = listNode.children[1]
+      expect(secondListItem.tagName.toLowerCase()).toBe('li')
+      expect(secondListItem.children.length).toBe(1)
+      expect(secondListItem.children[0].tagName.toLowerCase()).toBe('p')
+      expect(secondListItem.children[0].textContent).toBe(paragraphs[2])
     })
   })
 
-  it('should render unordered list with * syntax correctly', () => {
-    const textContents = ['Some text', 'Some other text', 'Even more text']
-    const markdown = textContents
-      .map(text => `* ${text}`)
-      .join('\n')
-    const dom = new JSDOM(
-      `<!DOCTYPE html>
-      <div id="root">
-        ${markdownToMarkup(markdown)}
-      </div>`
-    )
-    const root = dom.window.document.getElementById('root')
-    expect(root.children.length).toBe(1)
-    const listNode = root.children[0]
-    expect(listNode.tagName.toLowerCase()).toBe('ul')
-    expect(listNode.children.length).toBe(3)
-    Array.from(listNode.children).forEach((listItem, index) => {
-      expect(listItem.tagName.toLowerCase()).toBe('li')
-      expect(listItem.children.length).toBe(1)
-      expect(listItem.children[0].tagName.toLowerCase()).toBe('p')
-      expect(listItem.children[0].textContent).toBe(textContents[index])
+  describe('Unordered list', () => {
+    it('should render correctly with * syntax', () => {
+      const textContents = ['Some text', 'Some other text', 'Even more text']
+      const markdown = textContents
+        .map(text => `* ${text}`)
+        .join('\n')
+      const dom = new JSDOM(
+        `<!DOCTYPE html>
+        <div id="root">
+          ${markdownToMarkup(markdown)}
+        </div>`
+      )
+      const root = dom.window.document.getElementById('root')
+      expect(root.children.length).toBe(1)
+      const listNode = root.children[0]
+      expect(listNode.tagName.toLowerCase()).toBe('ul')
+      expect(listNode.children.length).toBe(3)
+      Array.from(listNode.children).forEach((listItem, index) => {
+        expect(listItem.tagName.toLowerCase()).toBe('li')
+        expect(listItem.children.length).toBe(1)
+        expect(listItem.children[0].tagName.toLowerCase()).toBe('p')
+        expect(listItem.children[0].textContent).toBe(textContents[index])
+      })
     })
-  })
 
-  it('should render unordered list with - syntax correctly', () => {
-    const textContents = ['Some text', 'Some other text', 'Even more text']
-    const markdown = textContents
-      .map(text => `- ${text}`)
-      .join('\n')
-    const dom = new JSDOM(
-      `<!DOCTYPE html>
-      <div id="root">
-        ${markdownToMarkup(markdown)}
-      </div>`
-    )
-    const root = dom.window.document.getElementById('root')
-    expect(root.children.length).toBe(1)
-    const listNode = root.children[0]
-    expect(listNode.tagName.toLowerCase()).toBe('ul')
-    expect(listNode.children.length).toBe(3)
-    Array.from(listNode.children).forEach((listItem, index) => {
-      expect(listItem.tagName.toLowerCase()).toBe('li')
-      expect(listItem.children.length).toBe(1)
-      expect(listItem.children[0].tagName.toLowerCase()).toBe('p')
-      expect(listItem.children[0].textContent).toBe(textContents[index])
+    it('should render correctly with - syntax', () => {
+      const textContents = ['Some text', 'Some other text', 'Even more text']
+      const markdown = textContents
+        .map(text => `- ${text}`)
+        .join('\n')
+      const dom = new JSDOM(
+        `<!DOCTYPE html>
+        <div id="root">
+          ${markdownToMarkup(markdown)}
+        </div>`
+      )
+      const root = dom.window.document.getElementById('root')
+      expect(root.children.length).toBe(1)
+      const listNode = root.children[0]
+      expect(listNode.tagName.toLowerCase()).toBe('ul')
+      expect(listNode.children.length).toBe(3)
+      Array.from(listNode.children).forEach((listItem, index) => {
+        expect(listItem.tagName.toLowerCase()).toBe('li')
+        expect(listItem.children.length).toBe(1)
+        expect(listItem.children[0].tagName.toLowerCase()).toBe('p')
+        expect(listItem.children[0].textContent).toBe(textContents[index])
+      })
     })
-  })
 
-  it('should render unordered list with + syntax correctly', () => {
-    const textContents = ['Some text', 'Some other text', 'Even more text']
-    const markdown = textContents
-      .map(text => `+ ${text}`)
-      .join('\n')
-    const dom = new JSDOM(
-      `<!DOCTYPE html>
-      <div id="root">
-        ${markdownToMarkup(markdown)}
-      </div>`
-    )
-    const root = dom.window.document.getElementById('root')
-    expect(root.children.length).toBe(1)
-    const listNode = root.children[0]
-    expect(listNode.tagName.toLowerCase()).toBe('ul')
-    expect(listNode.children.length).toBe(3)
-    Array.from(listNode.children).forEach((listItem, index) => {
-      expect(listItem.tagName.toLowerCase()).toBe('li')
-      expect(listItem.children.length).toBe(1)
-      expect(listItem.children[0].tagName.toLowerCase()).toBe('p')
-      expect(listItem.children[0].textContent).toBe(textContents[index])
+    it('should render correctly with + syntax', () => {
+      const textContents = ['Some text', 'Some other text', 'Even more text']
+      const markdown = textContents
+        .map(text => `+ ${text}`)
+        .join('\n')
+      const dom = new JSDOM(
+        `<!DOCTYPE html>
+        <div id="root">
+          ${markdownToMarkup(markdown)}
+        </div>`
+      )
+      const root = dom.window.document.getElementById('root')
+      expect(root.children.length).toBe(1)
+      const listNode = root.children[0]
+      expect(listNode.tagName.toLowerCase()).toBe('ul')
+      expect(listNode.children.length).toBe(3)
+      Array.from(listNode.children).forEach((listItem, index) => {
+        expect(listItem.tagName.toLowerCase()).toBe('li')
+        expect(listItem.children.length).toBe(1)
+        expect(listItem.children[0].tagName.toLowerCase()).toBe('p')
+        expect(listItem.children[0].textContent).toBe(textContents[index])
+      })
     })
-  })
 
-  it('should render ordered list and embedded markdown correctly', () => {
-    const textContents = [
-      {
-        beginning: 'Some text',
-        emphasis: 'with emphasis',
-        end: 'inside'
-      },
-      {
-        beginning: 'Some text',
-        emphasis: 'with emphasis',
-        end: 'inside'
-      }
-    ]
-    const markdownContents = [
-      `${textContents[0].beginning} *${textContents[0].emphasis}* ${textContents[0].end}`,
-      `${textContents[1].beginning} __${textContents[1].emphasis}__ ${textContents[1].end}`
-    ]
-    const markdown = markdownContents
-      .map(text => `1. ${text}`)
-      .join('\n')
-    const dom = new JSDOM(
-      `<!DOCTYPE html>
-      <div id="root">
-        ${markdownToMarkup(markdown)}
-      </div>`
-    )
-    const root = dom.window.document.getElementById('root')
-    expect(root.children.length).toBe(1)
-    const listNode = root.children[0]
-    expect(listNode.tagName.toLowerCase()).toBe('ol')
-    expect(listNode.children.length).toBe(2)
-    const firstListItem = listNode.children[0]
-    expect(firstListItem.tagName.toLowerCase()).toBe('li')
-    expect(firstListItem.textContent).toBe(
-      `${textContents[0].beginning} ${textContents[0].emphasis} ${textContents[0].end}`
-    )
-    expect(firstListItem.children.length).toBe(1)
-    expect(firstListItem.children[0].tagName.toLowerCase()).toBe('p')
-    expect(firstListItem.children[0].children.length).toBe(1)
-    expect(firstListItem.children[0].children[0].tagName.toLowerCase()).toBe('em')
-    expect(firstListItem.children[0].children[0].textContent).toBe(textContents[0].emphasis)
-    const secondListItem = listNode.children[0]
-    expect(secondListItem.tagName.toLowerCase()).toBe('li')
-    expect(secondListItem.textContent).toBe(
-      `${textContents[1].beginning} ${textContents[1].emphasis} ${textContents[1].end}`
-    )
-    expect(secondListItem.children.length).toBe(1)
-    expect(secondListItem.children[0].tagName.toLowerCase()).toBe('p')
-    expect(secondListItem.children[0].children.length).toBe(1)
-    expect(secondListItem.children[0].children[0].tagName.toLowerCase()).toBe('em')
-    expect(secondListItem.children[0].children[0].textContent).toBe(textContents[1].emphasis)
-  })
+    it('should render correctly with * syntax and embedded markdown', () => {
+      const textContents = [
+        {
+          beginning: 'Some text',
+          emphasis: 'with emphasis',
+          end: 'inside'
+        },
+        {
+          beginning: 'Some text',
+          emphasis: 'with emphasis',
+          end: 'inside'
+        }
+      ]
+      const markdownContents = [
+        `${textContents[0].beginning} *${textContents[0].emphasis}* ${textContents[0].end}`,
+        `${textContents[1].beginning} __${textContents[1].emphasis}__ ${textContents[1].end}`
+      ]
+      const markdown = markdownContents
+        .map(text => `* ${text}`)
+        .join('\n')
+      const dom = new JSDOM(
+        `<!DOCTYPE html>
+        <div id="root">
+          ${markdownToMarkup(markdown)}
+        </div>`
+      )
+      const root = dom.window.document.getElementById('root')
+      expect(root.children.length).toBe(1)
+      const listNode = root.children[0]
+      expect(listNode.tagName.toLowerCase()).toBe('ul')
+      expect(listNode.children.length).toBe(2)
+      const firstListItem = listNode.children[0]
+      expect(firstListItem.tagName.toLowerCase()).toBe('li')
+      expect(firstListItem.textContent).toBe(
+        `${textContents[0].beginning} ${textContents[0].emphasis} ${textContents[0].end}`
+      )
+      expect(firstListItem.children.length).toBe(1)
+      expect(firstListItem.children[0].tagName.toLowerCase()).toBe('p')
+      expect(firstListItem.children[0].children.length).toBe(1)
+      expect(firstListItem.children[0].children[0].tagName.toLowerCase()).toBe('em')
+      expect(firstListItem.children[0].children[0].textContent).toBe(textContents[0].emphasis)
+      const secondListItem = listNode.children[0]
+      expect(secondListItem.tagName.toLowerCase()).toBe('li')
+      expect(secondListItem.textContent).toBe(
+        `${textContents[1].beginning} ${textContents[1].emphasis} ${textContents[1].end}`
+      )
+      expect(secondListItem.children.length).toBe(1)
+      expect(secondListItem.children[0].tagName.toLowerCase()).toBe('p')
+      expect(secondListItem.children[0].children.length).toBe(1)
+      expect(secondListItem.children[0].children[0].tagName.toLowerCase()).toBe('em')
+      expect(secondListItem.children[0].children[0].textContent).toBe(textContents[1].emphasis)
+    })
 
-  it('should render unordered list with * syntax and embedded markdown correctly', () => {
-    const textContents = [
-      {
-        beginning: 'Some text',
-        emphasis: 'with emphasis',
-        end: 'inside'
-      },
-      {
-        beginning: 'Some text',
-        emphasis: 'with emphasis',
-        end: 'inside'
-      }
-    ]
-    const markdownContents = [
-      `${textContents[0].beginning} *${textContents[0].emphasis}* ${textContents[0].end}`,
-      `${textContents[1].beginning} __${textContents[1].emphasis}__ ${textContents[1].end}`
-    ]
-    const markdown = markdownContents
-      .map(text => `* ${text}`)
-      .join('\n')
-    const dom = new JSDOM(
-      `<!DOCTYPE html>
-      <div id="root">
-        ${markdownToMarkup(markdown)}
-      </div>`
-    )
-    const root = dom.window.document.getElementById('root')
-    expect(root.children.length).toBe(1)
-    const listNode = root.children[0]
-    expect(listNode.tagName.toLowerCase()).toBe('ul')
-    expect(listNode.children.length).toBe(2)
-    const firstListItem = listNode.children[0]
-    expect(firstListItem.tagName.toLowerCase()).toBe('li')
-    expect(firstListItem.textContent).toBe(
-      `${textContents[0].beginning} ${textContents[0].emphasis} ${textContents[0].end}`
-    )
-    expect(firstListItem.children.length).toBe(1)
-    expect(firstListItem.children[0].tagName.toLowerCase()).toBe('p')
-    expect(firstListItem.children[0].children.length).toBe(1)
-    expect(firstListItem.children[0].children[0].tagName.toLowerCase()).toBe('em')
-    expect(firstListItem.children[0].children[0].textContent).toBe(textContents[0].emphasis)
-    const secondListItem = listNode.children[0]
-    expect(secondListItem.tagName.toLowerCase()).toBe('li')
-    expect(secondListItem.textContent).toBe(
-      `${textContents[1].beginning} ${textContents[1].emphasis} ${textContents[1].end}`
-    )
-    expect(secondListItem.children.length).toBe(1)
-    expect(secondListItem.children[0].tagName.toLowerCase()).toBe('p')
-    expect(secondListItem.children[0].children.length).toBe(1)
-    expect(secondListItem.children[0].children[0].tagName.toLowerCase()).toBe('em')
-    expect(secondListItem.children[0].children[0].textContent).toBe(textContents[1].emphasis)
-  })
+    it('should render correctly with - syntax and embedded markdown', () => {
+      const textContents = [
+        {
+          beginning: 'Some text',
+          emphasis: 'with emphasis',
+          end: 'inside'
+        },
+        {
+          beginning: 'Some text',
+          emphasis: 'with emphasis',
+          end: 'inside'
+        }
+      ]
+      const markdownContents = [
+        `${textContents[0].beginning} *${textContents[0].emphasis}* ${textContents[0].end}`,
+        `${textContents[1].beginning} __${textContents[1].emphasis}__ ${textContents[1].end}`
+      ]
+      const markdown = markdownContents
+        .map(text => `- ${text}`)
+        .join('\n')
+      const dom = new JSDOM(
+        `<!DOCTYPE html>
+        <div id="root">
+          ${markdownToMarkup(markdown)}
+        </div>`
+      )
+      const root = dom.window.document.getElementById('root')
+      expect(root.children.length).toBe(1)
+      const listNode = root.children[0]
+      expect(listNode.tagName.toLowerCase()).toBe('ul')
+      expect(listNode.children.length).toBe(2)
+      const firstListItem = listNode.children[0]
+      expect(firstListItem.tagName.toLowerCase()).toBe('li')
+      expect(firstListItem.textContent).toBe(
+        `${textContents[0].beginning} ${textContents[0].emphasis} ${textContents[0].end}`
+      )
+      expect(firstListItem.children.length).toBe(1)
+      expect(firstListItem.children[0].tagName.toLowerCase()).toBe('p')
+      expect(firstListItem.children[0].children.length).toBe(1)
+      expect(firstListItem.children[0].children[0].tagName.toLowerCase()).toBe('em')
+      expect(firstListItem.children[0].children[0].textContent).toBe(textContents[0].emphasis)
+      const secondListItem = listNode.children[0]
+      expect(secondListItem.tagName.toLowerCase()).toBe('li')
+      expect(secondListItem.textContent).toBe(
+        `${textContents[1].beginning} ${textContents[1].emphasis} ${textContents[1].end}`
+      )
+      expect(secondListItem.children.length).toBe(1)
+      expect(secondListItem.children[0].tagName.toLowerCase()).toBe('p')
+      expect(secondListItem.children[0].children.length).toBe(1)
+      expect(secondListItem.children[0].children[0].tagName.toLowerCase()).toBe('em')
+      expect(secondListItem.children[0].children[0].textContent).toBe(textContents[1].emphasis)
+    })
 
-  it('should render unordered list with - syntax and embedded markdown correctly', () => {
-    const textContents = [
-      {
-        beginning: 'Some text',
-        emphasis: 'with emphasis',
-        end: 'inside'
-      },
-      {
-        beginning: 'Some text',
-        emphasis: 'with emphasis',
-        end: 'inside'
-      }
-    ]
-    const markdownContents = [
-      `${textContents[0].beginning} *${textContents[0].emphasis}* ${textContents[0].end}`,
-      `${textContents[1].beginning} __${textContents[1].emphasis}__ ${textContents[1].end}`
-    ]
-    const markdown = markdownContents
-      .map(text => `- ${text}`)
-      .join('\n')
-    const dom = new JSDOM(
-      `<!DOCTYPE html>
-      <div id="root">
-        ${markdownToMarkup(markdown)}
-      </div>`
-    )
-    const root = dom.window.document.getElementById('root')
-    expect(root.children.length).toBe(1)
-    const listNode = root.children[0]
-    expect(listNode.tagName.toLowerCase()).toBe('ul')
-    expect(listNode.children.length).toBe(2)
-    const firstListItem = listNode.children[0]
-    expect(firstListItem.tagName.toLowerCase()).toBe('li')
-    expect(firstListItem.textContent).toBe(
-      `${textContents[0].beginning} ${textContents[0].emphasis} ${textContents[0].end}`
-    )
-    expect(firstListItem.children.length).toBe(1)
-    expect(firstListItem.children[0].tagName.toLowerCase()).toBe('p')
-    expect(firstListItem.children[0].children.length).toBe(1)
-    expect(firstListItem.children[0].children[0].tagName.toLowerCase()).toBe('em')
-    expect(firstListItem.children[0].children[0].textContent).toBe(textContents[0].emphasis)
-    const secondListItem = listNode.children[0]
-    expect(secondListItem.tagName.toLowerCase()).toBe('li')
-    expect(secondListItem.textContent).toBe(
-      `${textContents[1].beginning} ${textContents[1].emphasis} ${textContents[1].end}`
-    )
-    expect(secondListItem.children.length).toBe(1)
-    expect(secondListItem.children[0].tagName.toLowerCase()).toBe('p')
-    expect(secondListItem.children[0].children.length).toBe(1)
-    expect(secondListItem.children[0].children[0].tagName.toLowerCase()).toBe('em')
-    expect(secondListItem.children[0].children[0].textContent).toBe(textContents[1].emphasis)
-  })
+    it('should render correctly with + syntax and embedded markdown', () => {
+      const textContents = [
+        {
+          beginning: 'Some text',
+          emphasis: 'with emphasis',
+          end: 'inside'
+        },
+        {
+          beginning: 'Some text',
+          emphasis: 'with emphasis',
+          end: 'inside'
+        }
+      ]
+      const markdownContents = [
+        `${textContents[0].beginning} *${textContents[0].emphasis}* ${textContents[0].end}`,
+        `${textContents[1].beginning} __${textContents[1].emphasis}__ ${textContents[1].end}`
+      ]
+      const markdown = markdownContents
+        .map(text => `+ ${text}`)
+        .join('\n')
+      const dom = new JSDOM(
+        `<!DOCTYPE html>
+        <div id="root">
+          ${markdownToMarkup(markdown)}
+        </div>`
+      )
+      const root = dom.window.document.getElementById('root')
+      expect(root.children.length).toBe(1)
+      const listNode = root.children[0]
+      expect(listNode.tagName.toLowerCase()).toBe('ul')
+      expect(listNode.children.length).toBe(2)
+      const firstListItem = listNode.children[0]
+      expect(firstListItem.tagName.toLowerCase()).toBe('li')
+      expect(firstListItem.textContent).toBe(
+        `${textContents[0].beginning} ${textContents[0].emphasis} ${textContents[0].end}`
+      )
+      expect(firstListItem.children.length).toBe(1)
+      expect(firstListItem.children[0].tagName.toLowerCase()).toBe('p')
+      expect(firstListItem.children[0].children.length).toBe(1)
+      expect(firstListItem.children[0].children[0].tagName.toLowerCase()).toBe('em')
+      expect(firstListItem.children[0].children[0].textContent).toBe(textContents[0].emphasis)
+      const secondListItem = listNode.children[0]
+      expect(secondListItem.tagName.toLowerCase()).toBe('li')
+      expect(secondListItem.textContent).toBe(
+        `${textContents[1].beginning} ${textContents[1].emphasis} ${textContents[1].end}`
+      )
+      expect(secondListItem.children.length).toBe(1)
+      expect(secondListItem.children[0].tagName.toLowerCase()).toBe('p')
+      expect(secondListItem.children[0].children.length).toBe(1)
+      expect(secondListItem.children[0].children[0].tagName.toLowerCase()).toBe('em')
+      expect(secondListItem.children[0].children[0].textContent).toBe(textContents[1].emphasis)
+    })
 
-  it('should render unordered list with + syntax and embedded markdown correctly', () => {
-    const textContents = [
-      {
-        beginning: 'Some text',
-        emphasis: 'with emphasis',
-        end: 'inside'
-      },
-      {
-        beginning: 'Some text',
-        emphasis: 'with emphasis',
-        end: 'inside'
-      }
-    ]
-    const markdownContents = [
-      `${textContents[0].beginning} *${textContents[0].emphasis}* ${textContents[0].end}`,
-      `${textContents[1].beginning} __${textContents[1].emphasis}__ ${textContents[1].end}`
-    ]
-    const markdown = markdownContents
-      .map(text => `+ ${text}`)
-      .join('\n')
-    const dom = new JSDOM(
-      `<!DOCTYPE html>
-      <div id="root">
-        ${markdownToMarkup(markdown)}
-      </div>`
-    )
-    const root = dom.window.document.getElementById('root')
-    expect(root.children.length).toBe(1)
-    const listNode = root.children[0]
-    expect(listNode.tagName.toLowerCase()).toBe('ul')
-    expect(listNode.children.length).toBe(2)
-    const firstListItem = listNode.children[0]
-    expect(firstListItem.tagName.toLowerCase()).toBe('li')
-    expect(firstListItem.textContent).toBe(
-      `${textContents[0].beginning} ${textContents[0].emphasis} ${textContents[0].end}`
-    )
-    expect(firstListItem.children.length).toBe(1)
-    expect(firstListItem.children[0].tagName.toLowerCase()).toBe('p')
-    expect(firstListItem.children[0].children.length).toBe(1)
-    expect(firstListItem.children[0].children[0].tagName.toLowerCase()).toBe('em')
-    expect(firstListItem.children[0].children[0].textContent).toBe(textContents[0].emphasis)
-    const secondListItem = listNode.children[0]
-    expect(secondListItem.tagName.toLowerCase()).toBe('li')
-    expect(secondListItem.textContent).toBe(
-      `${textContents[1].beginning} ${textContents[1].emphasis} ${textContents[1].end}`
-    )
-    expect(secondListItem.children.length).toBe(1)
-    expect(secondListItem.children[0].tagName.toLowerCase()).toBe('p')
-    expect(secondListItem.children[0].children.length).toBe(1)
-    expect(secondListItem.children[0].children[0].tagName.toLowerCase()).toBe('em')
-    expect(secondListItem.children[0].children[0].textContent).toBe(textContents[1].emphasis)
-  })
+    it('should render correctly with * syntax with multiple paragraphs', () => {
+      const subParagraphs = [
+        'This is the second paragraph in the list item.',
+        'Lorem ipsum dolor sit amet, consectetuer adipiscing elit.'
+      ]
+      const paragraphs = [
+        'This is a list item with two paragraphs.',
+        `${subParagraphs[0]}\n    ${subParagraphs[1]}`,
+        'Another item in the same list.'
+      ]
+      const markdown = `*   ${paragraphs[0]}\n\n    ${paragraphs[1]}\n\n*   ${paragraphs[2]}`
+      const dom = new JSDOM(
+        `<!DOCTYPE html>
+        <div id="root">
+          ${markdownToMarkup(markdown)}
+        </div>`
+      )
+      const root = dom.window.document.getElementById('root')
+      expect(root.children.length).toBe(1)
+      const listNode = root.children[0]
+      expect(listNode.tagName.toLowerCase()).toBe('ul')
+      expect(listNode.children.length).toBe(2)
+      const firstListItem = listNode.children[0]
+      expect(firstListItem.tagName.toLowerCase()).toBe('li')
+      expect(firstListItem.textContent).toBe(
+        `${paragraphs[0]}${subParagraphs[0]}\n${subParagraphs[1]}`
+      )
+      expect(firstListItem.children.length).toBe(2)
+      expect(firstListItem.children[0].tagName.toLowerCase()).toBe('p')
+      expect(firstListItem.children[0].textContent).toBe(paragraphs[0])
+      expect(firstListItem.children[1].tagName.toLowerCase()).toBe('p')
+      expect(firstListItem.children[1].textContent).toBe(paragraphs[1].replace('    ', ''))
+      const secondListItem = listNode.children[1]
+      expect(secondListItem.tagName.toLowerCase()).toBe('li')
+      expect(secondListItem.children.length).toBe(1)
+      expect(secondListItem.children[0].tagName.toLowerCase()).toBe('p')
+      expect(secondListItem.children[0].textContent).toBe(paragraphs[2])
+    })
 
-  it('should render ordered list with multiple paragraphs correctly', () => {
-    const subParagraphs = [
-      'This is the second paragraph in the list item.',
-      'Lorem ipsum dolor sit amet, consectetuer adipiscing elit.'
-    ]
-    const paragraphs = [
-      'This is a list item with two paragraphs.',
-      `${subParagraphs[0]}\n    ${subParagraphs[1]}`,
-      'Another item in the same list.'
-    ]
-    const markdown = `1.  ${paragraphs[0]}\n\n    ${paragraphs[1]}\n\n1.  ${paragraphs[2]}`
-    const dom = new JSDOM(
-      `<!DOCTYPE html>
-      <div id="root">
-        ${markdownToMarkup(markdown)}
-      </div>`
-    )
-    const root = dom.window.document.getElementById('root')
-    expect(root.children.length).toBe(1)
-    const listNode = root.children[0]
-    expect(listNode.tagName.toLowerCase()).toBe('ol')
-    expect(listNode.children.length).toBe(2)
-    const firstListItem = listNode.children[0]
-    expect(firstListItem.tagName.toLowerCase()).toBe('li')
-    expect(firstListItem.textContent).toBe(
-      `${paragraphs[0]}${subParagraphs[0]}\n${subParagraphs[1]}`
-    )
-    expect(firstListItem.children.length).toBe(2)
-    expect(firstListItem.children[0].tagName.toLowerCase()).toBe('p')
-    expect(firstListItem.children[0].textContent).toBe(paragraphs[0])
-    expect(firstListItem.children[1].tagName.toLowerCase()).toBe('p')
-    expect(firstListItem.children[1].textContent).toBe(paragraphs[1].replace('    ', ''))
-    const secondListItem = listNode.children[1]
-    expect(secondListItem.tagName.toLowerCase()).toBe('li')
-    expect(secondListItem.children.length).toBe(1)
-    expect(secondListItem.children[0].tagName.toLowerCase()).toBe('p')
-    expect(secondListItem.children[0].textContent).toBe(paragraphs[2])
-  })
+    it('should render correctly with - syntax with multiple paragraphs', () => {
+      const subParagraphs = [
+        'This is the second paragraph in the list item.',
+        'Lorem ipsum dolor sit amet, consectetuer adipiscing elit.'
+      ]
+      const paragraphs = [
+        'This is a list item with two paragraphs.',
+        `${subParagraphs[0]}\n    ${subParagraphs[1]}`,
+        'Another item in the same list.'
+      ]
+      const markdown = `-   ${paragraphs[0]}\n\n    ${paragraphs[1]}\n\n-   ${paragraphs[2]}`
+      const dom = new JSDOM(
+        `<!DOCTYPE html>
+        <div id="root">
+          ${markdownToMarkup(markdown)}
+        </div>`
+      )
+      const root = dom.window.document.getElementById('root')
+      expect(root.children.length).toBe(1)
+      const listNode = root.children[0]
+      expect(listNode.tagName.toLowerCase()).toBe('ul')
+      expect(listNode.children.length).toBe(2)
+      const firstListItem = listNode.children[0]
+      expect(firstListItem.tagName.toLowerCase()).toBe('li')
+      expect(firstListItem.textContent).toBe(
+        `${paragraphs[0]}${subParagraphs[0]}\n${subParagraphs[1]}`
+      )
+      expect(firstListItem.children.length).toBe(2)
+      expect(firstListItem.children[0].tagName.toLowerCase()).toBe('p')
+      expect(firstListItem.children[0].textContent).toBe(paragraphs[0])
+      expect(firstListItem.children[1].tagName.toLowerCase()).toBe('p')
+      expect(firstListItem.children[1].textContent).toBe(paragraphs[1].replace('    ', ''))
+      const secondListItem = listNode.children[1]
+      expect(secondListItem.tagName.toLowerCase()).toBe('li')
+      expect(secondListItem.children.length).toBe(1)
+      expect(secondListItem.children[0].tagName.toLowerCase()).toBe('p')
+      expect(secondListItem.children[0].textContent).toBe(paragraphs[2])
+    })
 
-  it('should render unordered list with * syntax with multiple paragraphs correctly', () => {
-    const subParagraphs = [
-      'This is the second paragraph in the list item.',
-      'Lorem ipsum dolor sit amet, consectetuer adipiscing elit.'
-    ]
-    const paragraphs = [
-      'This is a list item with two paragraphs.',
-      `${subParagraphs[0]}\n    ${subParagraphs[1]}`,
-      'Another item in the same list.'
-    ]
-    const markdown = `*   ${paragraphs[0]}\n\n    ${paragraphs[1]}\n\n*   ${paragraphs[2]}`
-    const dom = new JSDOM(
-      `<!DOCTYPE html>
-      <div id="root">
-        ${markdownToMarkup(markdown)}
-      </div>`
-    )
-    const root = dom.window.document.getElementById('root')
-    expect(root.children.length).toBe(1)
-    const listNode = root.children[0]
-    expect(listNode.tagName.toLowerCase()).toBe('ul')
-    expect(listNode.children.length).toBe(2)
-    const firstListItem = listNode.children[0]
-    expect(firstListItem.tagName.toLowerCase()).toBe('li')
-    expect(firstListItem.textContent).toBe(
-      `${paragraphs[0]}${subParagraphs[0]}\n${subParagraphs[1]}`
-    )
-    expect(firstListItem.children.length).toBe(2)
-    expect(firstListItem.children[0].tagName.toLowerCase()).toBe('p')
-    expect(firstListItem.children[0].textContent).toBe(paragraphs[0])
-    expect(firstListItem.children[1].tagName.toLowerCase()).toBe('p')
-    expect(firstListItem.children[1].textContent).toBe(paragraphs[1].replace('    ', ''))
-    const secondListItem = listNode.children[1]
-    expect(secondListItem.tagName.toLowerCase()).toBe('li')
-    expect(secondListItem.children.length).toBe(1)
-    expect(secondListItem.children[0].tagName.toLowerCase()).toBe('p')
-    expect(secondListItem.children[0].textContent).toBe(paragraphs[2])
-  })
-
-  it('should render unordered list with - syntax with multiple paragraphs correctly', () => {
-    const subParagraphs = [
-      'This is the second paragraph in the list item.',
-      'Lorem ipsum dolor sit amet, consectetuer adipiscing elit.'
-    ]
-    const paragraphs = [
-      'This is a list item with two paragraphs.',
-      `${subParagraphs[0]}\n    ${subParagraphs[1]}`,
-      'Another item in the same list.'
-    ]
-    const markdown = `-   ${paragraphs[0]}\n\n    ${paragraphs[1]}\n\n-   ${paragraphs[2]}`
-    const dom = new JSDOM(
-      `<!DOCTYPE html>
-      <div id="root">
-        ${markdownToMarkup(markdown)}
-      </div>`
-    )
-    const root = dom.window.document.getElementById('root')
-    expect(root.children.length).toBe(1)
-    const listNode = root.children[0]
-    expect(listNode.tagName.toLowerCase()).toBe('ul')
-    expect(listNode.children.length).toBe(2)
-    const firstListItem = listNode.children[0]
-    expect(firstListItem.tagName.toLowerCase()).toBe('li')
-    expect(firstListItem.textContent).toBe(
-      `${paragraphs[0]}${subParagraphs[0]}\n${subParagraphs[1]}`
-    )
-    expect(firstListItem.children.length).toBe(2)
-    expect(firstListItem.children[0].tagName.toLowerCase()).toBe('p')
-    expect(firstListItem.children[0].textContent).toBe(paragraphs[0])
-    expect(firstListItem.children[1].tagName.toLowerCase()).toBe('p')
-    expect(firstListItem.children[1].textContent).toBe(paragraphs[1].replace('    ', ''))
-    const secondListItem = listNode.children[1]
-    expect(secondListItem.tagName.toLowerCase()).toBe('li')
-    expect(secondListItem.children.length).toBe(1)
-    expect(secondListItem.children[0].tagName.toLowerCase()).toBe('p')
-    expect(secondListItem.children[0].textContent).toBe(paragraphs[2])
-  })
-
-  it('should render unordered list with + syntax with multiple paragraphs correctly', () => {
-    const subParagraphs = [
-      'This is the second paragraph in the list item.',
-      'Lorem ipsum dolor sit amet, consectetuer adipiscing elit.'
-    ]
-    const paragraphs = [
-      'This is a list item with two paragraphs.',
-      `${subParagraphs[0]}\n    ${subParagraphs[1]}`,
-      'Another item in the same list.'
-    ]
-    const markdown = `+   ${paragraphs[0]}\n\n    ${paragraphs[1]}\n\n+   ${paragraphs[2]}`
-    const dom = new JSDOM(
-      `<!DOCTYPE html>
-      <div id="root">
-        ${markdownToMarkup(markdown)}
-      </div>`
-    )
-    const root = dom.window.document.getElementById('root')
-    expect(root.children.length).toBe(1)
-    const listNode = root.children[0]
-    expect(listNode.tagName.toLowerCase()).toBe('ul')
-    expect(listNode.children.length).toBe(2)
-    const firstListItem = listNode.children[0]
-    expect(firstListItem.tagName.toLowerCase()).toBe('li')
-    expect(firstListItem.textContent).toBe(
-      `${paragraphs[0]}${subParagraphs[0]}\n${subParagraphs[1]}`
-    )
-    expect(firstListItem.children.length).toBe(2)
-    expect(firstListItem.children[0].tagName.toLowerCase()).toBe('p')
-    expect(firstListItem.children[0].textContent).toBe(paragraphs[0])
-    expect(firstListItem.children[1].tagName.toLowerCase()).toBe('p')
-    expect(firstListItem.children[1].textContent).toBe(paragraphs[1].replace('    ', ''))
-    const secondListItem = listNode.children[1]
-    expect(secondListItem.tagName.toLowerCase()).toBe('li')
-    expect(secondListItem.children.length).toBe(1)
-    expect(secondListItem.children[0].tagName.toLowerCase()).toBe('p')
-    expect(secondListItem.children[0].textContent).toBe(paragraphs[2])
+    it('should render correctly with + syntax with multiple paragraphs', () => {
+      const subParagraphs = [
+        'This is the second paragraph in the list item.',
+        'Lorem ipsum dolor sit amet, consectetuer adipiscing elit.'
+      ]
+      const paragraphs = [
+        'This is a list item with two paragraphs.',
+        `${subParagraphs[0]}\n    ${subParagraphs[1]}`,
+        'Another item in the same list.'
+      ]
+      const markdown = `+   ${paragraphs[0]}\n\n    ${paragraphs[1]}\n\n+   ${paragraphs[2]}`
+      const dom = new JSDOM(
+        `<!DOCTYPE html>
+        <div id="root">
+          ${markdownToMarkup(markdown)}
+        </div>`
+      )
+      const root = dom.window.document.getElementById('root')
+      expect(root.children.length).toBe(1)
+      const listNode = root.children[0]
+      expect(listNode.tagName.toLowerCase()).toBe('ul')
+      expect(listNode.children.length).toBe(2)
+      const firstListItem = listNode.children[0]
+      expect(firstListItem.tagName.toLowerCase()).toBe('li')
+      expect(firstListItem.textContent).toBe(
+        `${paragraphs[0]}${subParagraphs[0]}\n${subParagraphs[1]}`
+      )
+      expect(firstListItem.children.length).toBe(2)
+      expect(firstListItem.children[0].tagName.toLowerCase()).toBe('p')
+      expect(firstListItem.children[0].textContent).toBe(paragraphs[0])
+      expect(firstListItem.children[1].tagName.toLowerCase()).toBe('p')
+      expect(firstListItem.children[1].textContent).toBe(paragraphs[1].replace('    ', ''))
+      const secondListItem = listNode.children[1]
+      expect(secondListItem.tagName.toLowerCase()).toBe('li')
+      expect(secondListItem.children.length).toBe(1)
+      expect(secondListItem.children[0].tagName.toLowerCase()).toBe('p')
+      expect(secondListItem.children[0].textContent).toBe(paragraphs[2])
+    })
   })
 })
 
