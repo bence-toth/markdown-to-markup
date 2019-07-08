@@ -365,7 +365,7 @@ describe('List', () => {
     })
   })
 
-  it('should render unordered with * syntax list correctly', () => {
+  it('should render unordered list with * syntax correctly', () => {
     const textContents = ['Some text', 'Some other text', 'Even more text']
     const markdown = textContents
       .map(text => `* ${text}`)
@@ -389,7 +389,7 @@ describe('List', () => {
     })
   })
 
-  it('should render unordered with - syntax list correctly', () => {
+  it('should render unordered list with - syntax correctly', () => {
     const textContents = ['Some text', 'Some other text', 'Even more text']
     const markdown = textContents
       .map(text => `- ${text}`)
@@ -413,7 +413,7 @@ describe('List', () => {
     })
   })
 
-  it('should render unordered with + syntax list correctly', () => {
+  it('should render unordered list with + syntax correctly', () => {
     const textContents = ['Some text', 'Some other text', 'Even more text']
     const markdown = textContents
       .map(text => `+ ${text}`)
