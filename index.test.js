@@ -71,6 +71,7 @@ describe('Blockquote', () => {
 })
 
 // TODO: Code block (syntax highlighting, copying to clipboard)
+describe('Code block', () => {})
 
 describe('Emphasis', () => {
   it('should render correctly with every syntax', () => {
@@ -99,6 +100,11 @@ describe('Emphasis', () => {
     })
   })
 })
+
+// TODO: Figure
+// TODO: Figure with title
+// TODO: Reference resolver - Figure with and without title
+describe('Figure', () => {})
 
 describe('Headings', () => {
   it('with # syntax should render correctly', () => {
@@ -202,28 +208,50 @@ describe('HTML code', () => {
   })
 })
 
-// TODO: Image with title
 // TODO: Reference resolver - Images with and without title
-// describe('Image', () => {
-//   it('should render correctly', () => {
-//     const imageUrl = 'http://www.placecage.com/200/200'
-//     const altText = 'Alt text'
-//     const markdown = `![${altText}](${imageUrl})\n`
-//     const dom = new JSDOM(
-//       `<!DOCTYPE html>
-//       <div id="root">
-//         ${markdownToMarkup(markdown)}
-//       </div>`
-//     )
-//     const root = dom.window.document.getElementById('root')
-//     expect(root.children.length).toBe(1)
-//     const paragraphNode = root.children[0]
-//     expect(paragraphNode.children.length).toBe(1)
-//     const imageNode = paragraphNode.children[0]
-//     expect(imageNode.tagName.toLowerCase()).toBe('img')
-//     // TODO: Finish test case
-//   })
-// })
+describe('Image', () => {
+  it('should render correctly', () => {
+    const imageUrl = 'http://www.placecage.com/200/200'
+    const altText = 'Alt text'
+    const markdown = `A ![${altText}](${imageUrl}) B\n`
+    const dom = new JSDOM(
+      `<!DOCTYPE html>
+      <div id="root">
+        ${markdownToMarkup(markdown)}
+      </div>`
+    )
+    const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(1)
+    const paragraphNode = root.children[0]
+    expect(paragraphNode.children.length).toBe(1)
+    const imageNode = paragraphNode.children[0]
+    expect(imageNode.tagName.toLowerCase()).toBe('img')
+    expect(imageNode.src).toBe(imageUrl)
+    expect(imageNode.alt).toBe(altText)
+  })
+
+  it('should render correctly with title', () => {
+    const imageUrl = 'http://www.placecage.com/200/200'
+    const altText = 'Alt text'
+    const titleText = 'Title text'
+    const markdown = `A ![${altText}](${imageUrl} "${titleText}") B\n`
+    const dom = new JSDOM(
+      `<!DOCTYPE html>
+      <div id="root">
+        ${markdownToMarkup(markdown)}
+      </div>`
+    )
+    const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(1)
+    const paragraphNode = root.children[0]
+    expect(paragraphNode.children.length).toBe(1)
+    const imageNode = paragraphNode.children[0]
+    expect(imageNode.tagName.toLowerCase()).toBe('img')
+    expect(imageNode.src).toBe(imageUrl)
+    expect(imageNode.alt).toBe(altText)
+    expect(imageNode.title).toBe(titleText)
+  })
+})
 
 describe('Inline code', () => {
   it('should render correctly', () => {
@@ -863,3 +891,4 @@ describe('Thematic break', () => {
 })
 
 // TODO: Backslash escaping
+describe('Backslash escaping', () => {})
