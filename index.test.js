@@ -101,10 +101,62 @@ describe('Emphasis', () => {
   })
 })
 
-// TODO: Figure
-// TODO: Figure with title
 // TODO: Reference resolver - Figure with and without title
-describe('Figure', () => {})
+describe('Figure', () => {
+  it('should render correctly', () => {
+    const imageUrl = 'http://www.placecage.com/200/200'
+    const altText = 'Alt text'
+    const markdown = `![${altText}](${imageUrl})\n`
+    const dom = new JSDOM(
+      `<!DOCTYPE html>
+      <div id="root">
+        ${markdownToMarkup(markdown)}
+      </div>`
+    )
+    const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(1)
+    const wrapperNode = root.children[0]
+    expect(wrapperNode.tagName.toLowerCase()).toBe('div')
+    expect(wrapperNode.classList.contains('figureWrapper')).toBe(true)
+    expect(wrapperNode.children.length).toBe(1)
+    const figureNode = wrapperNode.children[0]
+    expect(figureNode.tagName.toLowerCase()).toBe('figure')
+    expect(figureNode.children.length).toBe(1)
+    const imageNode = figureNode.children[0]
+    expect(imageNode.tagName.toLowerCase()).toBe('img')
+    expect(imageNode.src).toBe(imageUrl)
+    expect(imageNode.alt).toBe(altText)
+  })
+
+  it('should render correctly with title', () => {
+    const imageUrl = 'http://www.placecage.com/200/200'
+    const altText = 'Alt text'
+    const titleText = 'Title text'
+    const markdown = `![${altText}](${imageUrl} "${titleText}")\n`
+    const dom = new JSDOM(
+      `<!DOCTYPE html>
+      <div id="root">
+        ${markdownToMarkup(markdown)}
+      </div>`
+    )
+    const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(1)
+    const wrapperNode = root.children[0]
+    expect(wrapperNode.tagName.toLowerCase()).toBe('div')
+    expect(wrapperNode.classList.contains('figureWrapper')).toBe(true)
+    expect(wrapperNode.children.length).toBe(1)
+    const figureNode = wrapperNode.children[0]
+    expect(figureNode.tagName.toLowerCase()).toBe('figure')
+    expect(figureNode.children.length).toBe(2)
+    const imageNode = figureNode.children[0]
+    expect(imageNode.tagName.toLowerCase()).toBe('img')
+    expect(imageNode.src).toBe(imageUrl)
+    expect(imageNode.alt).toBe(altText)
+    const captionNode = figureNode.children[1]
+    expect(captionNode.tagName.toLowerCase()).toBe('figcaption')
+    expect(captionNode.textContent).toBe(titleText)
+  })
+})
 
 describe('Headings', () => {
   it('with # syntax should render correctly', () => {
