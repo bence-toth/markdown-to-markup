@@ -4,6 +4,7 @@ const {
   renderBlockQuotation,
   renderCodeBlock,
   renderEmphasis,
+  renderFigure,
   renderHeading,
   renderHtml,
   renderImage,
@@ -30,6 +31,7 @@ const tokenToMarkup = token => {
       token,
       tokenToMarkup
     }),
+    figure: () => renderFigure({token}),
     heading: () => renderHeading({
       token,
       headingLevelOffset,
