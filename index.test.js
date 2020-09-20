@@ -315,7 +315,6 @@ describe('HTML code', () => {
   })
 })
 
-// TODO: Reference resolver - Images with and without title
 describe('Image', () => {
   it('should render correctly', () => {
     const imageUrl = 'http://www.placecage.com/200/200'
@@ -342,6 +341,50 @@ describe('Image', () => {
     const altText = 'Alt text'
     const titleText = 'Title text'
     const markdown = `A ![${altText}](${imageUrl} "${titleText}") B\n`
+    const dom = new JSDOM(
+      `<!DOCTYPE html>
+      <div id="root">
+        ${markdownToMarkup(markdown)}
+      </div>`
+    )
+    const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(1)
+    const paragraphNode = root.children[0]
+    expect(paragraphNode.children.length).toBe(1)
+    const imageNode = paragraphNode.children[0]
+    expect(imageNode.tagName.toLowerCase()).toBe('img')
+    expect(imageNode.src).toBe(imageUrl)
+    expect(imageNode.alt).toBe(altText)
+    expect(imageNode.title).toBe(titleText)
+  })
+
+  it('should resolve reference and render correctly', () => {
+    const imageUrl = 'http://www.placecage.com/200/200'
+    const altText = 'Alt text'
+    const reference = 'imageReference'
+    const markdown = `A ![${altText}][${reference}] B\n\n[${reference}]: ${imageUrl}`
+    const dom = new JSDOM(
+      `<!DOCTYPE html>
+      <div id="root">
+        ${markdownToMarkup(markdown)}
+      </div>`
+    )
+    const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(1)
+    const paragraphNode = root.children[0]
+    expect(paragraphNode.children.length).toBe(1)
+    const imageNode = paragraphNode.children[0]
+    expect(imageNode.tagName.toLowerCase()).toBe('img')
+    expect(imageNode.src).toBe(imageUrl)
+    expect(imageNode.alt).toBe(altText)
+  })
+
+  it('should resolve reference and render correctly with title', () => {
+    const imageUrl = 'http://www.placecage.com/200/200'
+    const altText = 'Alt text'
+    const titleText = 'Title text'
+    const reference = 'imageReference'
+    const markdown = `A ![${altText}][${reference}] B\n\n[${reference}]: ${imageUrl} "${titleText}"`
     const dom = new JSDOM(
       `<!DOCTYPE html>
       <div id="root">
