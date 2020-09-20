@@ -101,7 +101,6 @@ describe('Emphasis', () => {
   })
 })
 
-// TODO: Reference resolver - Figure with and without title
 describe('Figure', () => {
   it('should render correctly', () => {
     const imageUrl = 'http://www.placecage.com/200/200'
