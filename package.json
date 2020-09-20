@@ -8,7 +8,6 @@
   },
   "author": "",
   "license": "MIT",
-  "type": "module",
   "dependencies": {
     "html-entities": "^1.2.1",
     "prismjs": "^1.16.0",
