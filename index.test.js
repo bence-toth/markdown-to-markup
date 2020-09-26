@@ -1166,6 +1166,23 @@ describe('Paragraph', () => {
     expect(emphasisNode.tagName.toLowerCase()).toBe('strong')
     expect(emphasisNode.textContent).toBe(emphasisContent)
   })
+
+  it('should render notice box correctly', () => {
+    const actualTextContent = 'You should be aware of this'
+    const textContent = `NOTICE: ${actualTextContent}`
+    const dom = new JSDOM(
+      `<!DOCTYPE html>
+      <div id="root">
+        ${markdownToMarkup(textContent)}
+      </div>`
+    )
+    const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(1)
+    expect(root.children[0].tagName.toLowerCase()).toBe('p')
+    expect(root.children[0].classList.contains('notice')).toBe(true)
+    expect(root.children[0].textContent).toBe(actualTextContent)
+  })
+
 })
 
 describe('Thematic break', () => {
