@@ -657,7 +657,6 @@ describe('Link', () => {
   })
 })
 
-// TODO: Lists in lists, lists in lists in lists
 describe('List', () => {
   describe('Ordered list', () => {
     it('should render correctly', () => {
@@ -1170,6 +1169,48 @@ describe('List', () => {
     expect(listNode.children[2].children[0].textContent).toBe(textContents[2])
   })
 
+  it('should render nested list with mixed syntax correctly', () => {
+    const textContents = ['Some text', 'Some other text', 'Even more text']
+    const nestedContents = ['Some nested text', 'Some other nested text', 'Even more nested text']
+    const nestedListMarkdown = nestedContents
+      .map(text => `  * ${text}`)
+      .join('\n')
+    const markdown = `- ${textContents[0]}\n- ${textContents[1]}\n${nestedListMarkdown}\n- ${textContents[2]}`
+    const dom = new JSDOM(
+      `<!DOCTYPE html>
+      <div id="root">
+        ${markdownToMarkup(markdown)}
+      </div>`
+    )
+    const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(1)
+    const listNode = root.children[0]
+    expect(listNode.tagName.toLowerCase()).toBe('ul')
+    expect(listNode.children.length).toBe(3)
+    expect(listNode.children[0].tagName.toLowerCase()).toBe('li')
+    expect(listNode.children[0].children.length).toBe(1)
+    expect(listNode.children[0].children[0].tagName.toLowerCase()).toBe('p')
+    expect(listNode.children[0].children[0].textContent).toBe(textContents[0])
+    expect(listNode.children[1].tagName.toLowerCase()).toBe('li')
+    expect(listNode.children[1].children.length).toBe(2)
+    expect(listNode.children[1].children[0].tagName.toLowerCase()).toBe('p')
+    expect(listNode.children[1].children[0].textContent).toBe(textContents[1])
+    const nestedList = listNode.children[1].children[1]
+    expect(nestedList.tagName.toLowerCase()).toBe('ul')
+    expect(nestedList.children.length).toBe(3)
+    expect(nestedList.children[0].tagName.toLowerCase()).toBe('li')
+    expect(nestedList.children[0].children.length).toBe(1)
+    expect(nestedList.children[0].children[0].tagName.toLowerCase()).toBe('p')
+    expect(nestedList.children[0].children[0].textContent).toBe(nestedContents[0])
+    expect(nestedList.children[1].children[0].tagName.toLowerCase()).toBe('p')
+    expect(nestedList.children[1].children[0].textContent).toBe(nestedContents[1])
+    expect(nestedList.children[2].children[0].tagName.toLowerCase()).toBe('p')
+    expect(nestedList.children[2].children[0].textContent).toBe(nestedContents[2])
+    expect(listNode.children[2].tagName.toLowerCase()).toBe('li')
+    expect(listNode.children[2].children.length).toBe(1)
+    expect(listNode.children[2].children[0].tagName.toLowerCase()).toBe('p')
+    expect(listNode.children[2].children[0].textContent).toBe(textContents[2])
+  })
 })
 
 describe('Paragraph', () => {
