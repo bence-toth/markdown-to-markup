@@ -1128,7 +1128,6 @@ describe('List', () => {
   })
 })
 
-// TODO: Danger, warning, notice boxes
 describe('Paragraph', () => {
   it('should render correctly', () => {
     const textContent = 'Some text'
@@ -1199,6 +1198,21 @@ describe('Paragraph', () => {
     expect(root.children[0].textContent).toBe(actualTextContent)
   })
 
+  it('should render danger box correctly', () => {
+    const actualTextContent = 'You should be aware of this'
+    const textContent = `DANGER: ${actualTextContent}`
+    const dom = new JSDOM(
+      `<!DOCTYPE html>
+      <div id="root">
+        ${markdownToMarkup(textContent)}
+      </div>`
+    )
+    const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(1)
+    expect(root.children[0].tagName.toLowerCase()).toBe('p')
+    expect(root.children[0].classList.contains('danger')).toBe(true)
+    expect(root.children[0].textContent).toBe(actualTextContent)
+  })
 })
 
 describe('Thematic break', () => {
