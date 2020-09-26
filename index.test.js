@@ -70,8 +70,68 @@ describe('Blockquote', () => {
   })
 })
 
-// TODO: Code block (syntax highlighting, copying to clipboard)
-describe('Code block', () => {})
+describe('Code block', () => {
+  it('should render correctly', () => {
+    const codeContent = 'language is not identified'
+    const markdown = [
+      '```',
+      codeContent,
+      '```'
+    ].join('\n')
+    const dom = new JSDOM(
+      `<!DOCTYPE html>
+      <div id="root">
+        ${markdownToMarkup(markdown)}
+      </div>`
+    )
+    const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(3)
+    expect(root.children[0].tagName.toLowerCase()).toBe('script')
+    const preNode = root.children[1]
+    expect(preNode.outerHTML.includes(codeContent)).toBe(true)
+    expect(root.children[2].tagName.toLowerCase()).toBe('div')
+    expect(root.children[2].children.length).toBe(1)
+    expect(root.children[2].children[0].tagName.toLowerCase()).toBe('button')
+    expect(root.children[2].children[0].textContent).toBe('Copy to clipboard')
+  })
+
+  it('should render correctly with syntax highlighting', () => {
+    const markdown = [
+      '```js',
+      'const numbers = [1, 2, 3]',
+      'const doubles = numbers',
+      '  .map(',
+      '    number => number * 2',
+      '  )',
+      '```'
+    ].join('\n')
+    const dom = new JSDOM(
+      `<!DOCTYPE html>
+      <div id="root">
+        ${markdownToMarkup(markdown)}
+      </div>`
+    )
+    const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(3)
+    expect(root.children[0].tagName.toLowerCase()).toBe('script')
+    const preNode = root.children[1]
+    const fragments = [
+      '<code class="language-js">',
+      '<span class="token keyword">const</span>',
+      '<span class="token operator">=</span>',
+      '<span class="token punctuation">[</span>',
+      '<span class="token number">1</span>',
+      '<span class="token function">map</span>'
+    ]
+    fragments.forEach(fragment => {
+      expect(preNode.outerHTML.includes(fragment)).toBe(true)
+    })
+    expect(root.children[2].tagName.toLowerCase()).toBe('div')
+    expect(root.children[2].children.length).toBe(1)
+    expect(root.children[2].children[0].tagName.toLowerCase()).toBe('button')
+    expect(root.children[2].children[0].textContent).toBe('Copy to clipboard')
+  })
+})
 
 describe('Emphasis', () => {
   it('should render correctly with every syntax', () => {
