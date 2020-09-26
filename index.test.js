@@ -1138,7 +1138,7 @@ describe('Paragraph', () => {
         ${markdownToMarkup(textContent)}
       </div>`
     )
-  const root = dom.window.document.getElementById('root')
+    const root = dom.window.document.getElementById('root')
     expect(root.children.length).toBe(1)
     expect(root.children[0].tagName.toLowerCase()).toBe('p')
     expect(root.children[0].textContent).toBe(textContent)
