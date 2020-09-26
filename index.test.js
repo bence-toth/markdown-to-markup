@@ -1183,6 +1183,22 @@ describe('Paragraph', () => {
     expect(root.children[0].textContent).toBe(actualTextContent)
   })
 
+  it('should render warning box correctly', () => {
+    const actualTextContent = 'You should be aware of this'
+    const textContent = `WARNING: ${actualTextContent}`
+    const dom = new JSDOM(
+      `<!DOCTYPE html>
+      <div id="root">
+        ${markdownToMarkup(textContent)}
+      </div>`
+    )
+    const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(1)
+    expect(root.children[0].tagName.toLowerCase()).toBe('p')
+    expect(root.children[0].classList.contains('warning')).toBe(true)
+    expect(root.children[0].textContent).toBe(actualTextContent)
+  })
+
 })
 
 describe('Thematic break', () => {
