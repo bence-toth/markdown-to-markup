@@ -473,6 +473,29 @@ describe('Link', () => {
     expect(anchorNode.title).toBe(title)
   })
 
+  it('should resolve reference and render correctly', () => {
+    const href = 'https://github.com/'
+    const textContent = 'Link'
+    const restOfTheParagraph = ' in a paragraph'
+    const reference = 'linkReference'
+    const markdown = `[${textContent}][${reference}]${restOfTheParagraph}\n\n[${reference}]: ${href}`
+    const dom = new JSDOM(
+      `<!DOCTYPE html>
+      <div id="root">
+        ${markdownToMarkup(markdown)}
+      </div>`
+    )
+    const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(1)
+    const paragraphNode = root.children[0]
+    expect(paragraphNode.children.length).toBe(1)
+    expect(paragraphNode.textContent).toBe(`${textContent}${restOfTheParagraph}`)
+    const anchorNode = paragraphNode.children[0]
+    expect(anchorNode.tagName.toLowerCase()).toBe('a')
+    expect(anchorNode.textContent).toBe(textContent)
+    expect(anchorNode.href).toBe(href)
+  })
+
   it('should render correctly with auto link', () => {
     const [start, href, end] = ['You should visit', 'https://github.com/', 'for cool stuff.']
     const markdown = `${start} ${href} ${end}`
