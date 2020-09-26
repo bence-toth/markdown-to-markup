@@ -59,7 +59,7 @@ const tokenToMarkup = token => {
     text: () => renderText({token}),
     thematicBreak: () => renderThematicBreak()
   }
-  return tokenRenderer[type] ? tokenRenderer[type]() : ''
+  return tokenRenderer[type]()
 }
 
 module.exports = {tokenToMarkup}
