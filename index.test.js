@@ -1230,5 +1230,34 @@ describe('Thematic break', () => {
   })
 })
 
-// TODO: Backslash escaping
-describe('Backslash escaping', () => {})
+describe('Backslash escaping', () => {
+  it('should render correctly with escaped heading', () => {
+    const actualTextContent = '# Not a heading'
+    const textContent = `\\${actualTextContent}`
+    const dom = new JSDOM(
+      `<!DOCTYPE html>
+      <div id="root">
+        ${markdownToMarkup(textContent)}
+      </div>`
+    )
+    const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(1)
+    expect(root.children[0].tagName.toLowerCase()).toBe('p')
+    expect(root.children[0].textContent).toBe(actualTextContent)
+  })
+
+  it('should render correctly with escaped list', () => {
+    const actualTextContent = '- Not a list'
+    const textContent = `\\${actualTextContent}`
+    const dom = new JSDOM(
+      `<!DOCTYPE html>
+      <div id="root">
+        ${markdownToMarkup(textContent)}
+      </div>`
+    )
+    const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(1)
+    expect(root.children[0].tagName.toLowerCase()).toBe('p')
+    expect(root.children[0].textContent).toBe(actualTextContent)
+  })
+})
