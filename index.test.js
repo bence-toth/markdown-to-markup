@@ -424,7 +424,6 @@ describe('Inline code', () => {
 })
 
 // TODO: Link with embedded markdown (with and without title)
-// TODO: Reference resolver - Simple link
 // TODO: Reference resolver - Link with embedded markdown
 describe('Link', () => {
   it('should render correctly', () => {
@@ -494,6 +493,31 @@ describe('Link', () => {
     expect(anchorNode.tagName.toLowerCase()).toBe('a')
     expect(anchorNode.textContent).toBe(textContent)
     expect(anchorNode.href).toBe(href)
+  })
+
+  it('should resolve reference and render correctly with title', () => {
+    const href = 'https://github.com/'
+    const textContent = 'Link'
+    const restOfTheParagraph = ' in a paragraph'
+    const title = 'Link title'
+    const reference = 'linkReference'
+    const markdown = `[${textContent}][${reference}]${restOfTheParagraph}\n\n[${reference}]: ${href} "${title}"`
+    const dom = new JSDOM(
+      `<!DOCTYPE html>
+      <div id="root">
+        ${markdownToMarkup(markdown)}
+      </div>`
+    )
+    const root = dom.window.document.getElementById('root')
+    expect(root.children.length).toBe(1)
+    const paragraphNode = root.children[0]
+    expect(paragraphNode.children.length).toBe(1)
+    expect(paragraphNode.textContent).toBe(`${textContent}${restOfTheParagraph}`)
+    const anchorNode = paragraphNode.children[0]
+    expect(anchorNode.tagName.toLowerCase()).toBe('a')
+    expect(anchorNode.textContent).toBe(textContent)
+    expect(anchorNode.href).toBe(href)
+    expect(anchorNode.title).toBe(title)
   })
 
   it('should render correctly with auto link', () => {
